@@ -66,7 +66,11 @@ export class Server {
   public start() {
     if (!this.runningServer) {
       this.runningServer = this.server.listen(this.config.port);
-      console.log("StartupJobsBot started at port " + this.config.port);
+      console.log(
+        `StartupJobsBot started at port ${this.config.port} and webhook path ${
+          this.config.webhookPath
+        }`
+      );
     } else {
       console.error("Server is already running!");
     }

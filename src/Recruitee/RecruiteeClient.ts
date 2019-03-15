@@ -28,8 +28,9 @@ export class RecruiteeClient {
           sources: ["StartupJobs"],
           cover_letter: candidate.why,
           links: [candidate.details],
-          social_links: candidate.linkedin && [candidate.linkedin],
-          remote_cv_url: candidate.files.length > 0 && candidate.files[0]
+          social_links: candidate.linkedin ? [candidate.linkedin] : undefined,
+          remote_cv_url:
+            candidate.files.length > 0 ? candidate.files[0] : undefined
         }
       },
       {

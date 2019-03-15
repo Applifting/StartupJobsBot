@@ -33,7 +33,7 @@ export const getConfig = (): Config => {
       logErrors: true,
       logPayloads: process.env.LOG_PAYLOADS === "true" || false,
       logRequests: process.env.LOG_REQUESTS === "true" || false,
-      webhookPath: process.env.WEBHOOK_PATH!
+      webhookPath: process.env.WEBHOOK_PATH || "/webhook"
     },
     recruitee: recruiteeConfig,
     slack: slackConfig

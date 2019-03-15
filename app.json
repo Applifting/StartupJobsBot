@@ -1,0 +1,6 @@
+{
+  "name": "StartupJobsBot",
+  "description": "Tiny service that takes candidate webhook from Startupsjob and announces the candidate on Slack and adds it to Recruitee.",
+  "repository": "https://github.com/Applifting/StartupJobsBot",
+  "keywords": ["startupjobs", "slack", "recruitee" ,"node", "typescript", "koa"]
+}

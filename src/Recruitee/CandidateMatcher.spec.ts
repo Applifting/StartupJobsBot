@@ -29,7 +29,7 @@ describe("CandidateMatcher", () => {
     it("by internal position", () => {
       expect(
         matcher.matchCandidateToOfferId(mrShark, [
-          { ...webhookDevOffer, name: "JOB1" },
+          { ...webhookDevOffer, title: "JOB1" },
           UXDesignerOffer
         ])
       ).toEqual(1);
@@ -41,7 +41,7 @@ describe("CandidateMatcher", () => {
           {
             ...webhookDevOffer,
             offer_tags: ["JOB1", "Some othe tags"],
-            name: "some nonsensical name"
+            title: "some nonsensical name"
           }
         ])
       ).toEqual(1);

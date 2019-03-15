@@ -32,7 +32,7 @@ export const getConfig = (): Config => {
       port: Number.parseInt(process.env.PORT || "3000"),
       logErrors: true,
       logPayloads: process.env.LOG_PAYLOADS === "true" || false,
-      logRequests: process.env.LOG_REQUESTS === "true" || false,
+      logRequests: process.env.LOG_REQUESTS === "true" || true,
       webhookPath: process.env.WEBHOOK_PATH || "/webhook"
     },
     recruitee: recruiteeConfig,

@@ -20,7 +20,7 @@ export class RecruiteeClient {
         this.config.companyDomain
       )}/candidates`,
       {
-        offers: [250113],
+        offers: [offerId],
         candidate: {
           name: candidate.name,
           emails: [candidate.email],

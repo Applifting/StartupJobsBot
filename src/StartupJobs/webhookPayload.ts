@@ -47,12 +47,14 @@ export const startupJobsPayloadSchema = Joi.object().keys({
     .required()
     .trim(),
   why: Joi.string().trim(),
-  phone: Joi.string().required(),
+  phone: Joi.string().allow(""),
   email: Joi.string()
     .email()
     .trim(),
   details: Joi.string().required(),
-  linkedin: Joi.string().trim(),
+  linkedin: Joi.string()
+    .trim()
+    .allow(""),
   internalPositionName: Joi.string().trim(),
   files: Joi.array().items(Joi.string()),
   gdpr_accepted: Joi.boolean().required()

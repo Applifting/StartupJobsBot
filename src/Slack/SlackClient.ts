@@ -12,7 +12,7 @@ export class SlackClient implements ISlackClient {
     this.config = config;
   }
 
-  public sendCandidateToSclack(
+  public sendCandidateToSlack(
     candididate: StartupJobsPayload
   ): AxiosPromise<any> {
     const title = this.config.messageTitle || "Nový kandidát!";

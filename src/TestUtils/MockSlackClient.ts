@@ -4,7 +4,7 @@ import { AxiosPromise, AxiosResponse } from "axios";
 
 export class MockSlackClient implements ISlackClient {
   public sendCandidateToSlackCalled = false;
-  sendCandidateToSclack(candididate: StartupJobsPayload): AxiosPromise<any> {
+  sendCandidateToSlack(candididate: StartupJobsPayload): AxiosPromise<any> {
     this.sendCandidateToSlackCalled = true;
     return Promise.resolve({ status: 200 } as AxiosResponse<any>);
   }

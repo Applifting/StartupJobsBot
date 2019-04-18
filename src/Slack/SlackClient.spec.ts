@@ -21,7 +21,7 @@ describe("SlackClient", () => {
 
     it("sends the webhook payload", async () => {
       const client = new SlackClient({ webhookUrl: "/test" });
-      await client.sendCandidateToSclack(mrShark);
+      await client.sendCandidateToSlack(mrShark);
       const expectedPayload = {
         text:
           "Nový kandidát!\nPan Žralok chce být Vývojář webhooků\n\n\n:phone: +420 725 875 752\n:email: dev@startupjobs.cz\n",

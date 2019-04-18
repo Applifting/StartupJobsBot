@@ -20,7 +20,7 @@ export class RecruiteeClient {
         this.config.companyDomain
       )}/candidates`,
       {
-        offers: [250113],
+        offers: [offerId],
         candidate: {
           name: candidate.name,
           emails: [candidate.email],
@@ -52,6 +52,6 @@ export class RecruiteeClient {
           }
         }
       )
-      .then(r => r.data.offers);
+      .then((r: any) => r.data.offers);
   }
 }

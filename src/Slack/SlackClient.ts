@@ -49,8 +49,9 @@ export class SlackClient implements ISlackClient, IErrorReporter {
         },
         {
           fallback: `Error`,
+          color: "#FF0000",
           title: "Error :warning:",
-          text: error
+          text: inspect(error)
         }
       ]
     };

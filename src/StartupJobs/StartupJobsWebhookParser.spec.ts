@@ -12,6 +12,14 @@ describe("StartupJobsWebhookParser", () => {
     it("parses OK", () => {
       expect(parser.parse(mrShark)).toEqual(mrShark);
     });
+
+    it("parses OK when nulls are present", () => {
+      expect(parser.parse({ ...mrShark, linkedin: null, why: null })).toEqual({
+        ...mrShark,
+        linkedin: null,
+        why: null
+      });
+    });
   });
 
   describe("Invalid candidate", () => {

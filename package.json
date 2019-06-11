@@ -9,6 +9,7 @@
     "start": "ts-node src/index.ts",
     "build": "rm -rf build && tsc",
     "lint": "tslint -p . -c tslint.json -t verbose --fix",
+    "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage"
   },
   "dependencies": {

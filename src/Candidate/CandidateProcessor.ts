@@ -23,7 +23,7 @@ export class CandiateProcessor {
   public async process(payload: StartupJobsPayload) {
     const anonymizer = new CandidateAnonymizer();
     if (this.slack) {
-      await this.slack.sendCandidateToSclack(
+      await this.slack.sendCandidateToSlack(
         payload.gdpr_accepted ? payload : anonymizer.anonymize(payload)
       );
     }

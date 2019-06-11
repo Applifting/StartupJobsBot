@@ -15,6 +15,13 @@ export class RecruiteeClient {
     offerId: number,
     candidate: StartupJobsPayload
   ): AxiosPromise<any> {
+    let remote_cv_url =
+      candidate.files.length > 0 ? candidate.files[0] : undefined;
+    // recruitee does not accept relative path
+    if (remote_cv_url && !remote_cv_url.startsWith("http")) {
+      remote_cv_url = undefined;
+    }
+
     return axios.post(
       `https://api.recruitee.com/c/${DomainNormalizer.normalize(
         this.config.companyDomain
@@ -29,8 +36,7 @@ export class RecruiteeClient {
           cover_letter: candidate.why,
           links: [candidate.details],
           social_links: candidate.linkedin ? [candidate.linkedin] : undefined,
-          remote_cv_url:
-            candidate.files.length > 0 ? candidate.files[0] : undefined
+          remote_cv_url
         }
       },
       {
@@ -53,6 +59,6 @@ export class RecruiteeClient {
           }
         }
       )
-      .then(r => r.data.offers);
+      .then((r: any) => r.data.offers);
   }
 }

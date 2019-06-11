@@ -4,8 +4,9 @@ import { SlackConfig } from "./SlackConfig";
 import url from "url";
 import { inspect } from "util";
 import { ISlackClient } from "./ISlackClient";
+import { IErrorReporter } from "../Common/IErrorReporter";
 
-export class SlackClient implements ISlackClient {
+export class SlackClient implements ISlackClient, IErrorReporter {
   private config: SlackConfig;
 
   constructor(config: SlackConfig) {
@@ -35,6 +36,25 @@ export class SlackClient implements ISlackClient {
       ]
     };
     return axios.post(this.config.webhookUrl, payload);
+  }
+  public reportError(payload: string, error: Error): Promise<any> {
+    const slackPayload = {
+      text: `Startupjobsbot nedovedlo zpracovat webhook! :white_frowning_face:\n`,
+      attachments: [
+        {
+          fallback: ``,
+          color: "#6B97CA",
+          title: "Payload :package:",
+          text: payload
+        },
+        {
+          fallback: `Error`,
+          title: "Error :warning:",
+          text: error
+        }
+      ]
+    };
+    return axios.post(this.config.webhookUrl, slackPayload);
   }
 
   public static assembleLinks(candididate: StartupJobsPayload): string {

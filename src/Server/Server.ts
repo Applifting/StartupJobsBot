@@ -4,6 +4,7 @@ import { StartupJobsWebhookParser } from "../StartupJobs/StartupJobsWebhookParse
 import { inspect } from "util";
 import { CandiateProcessor } from "../Candidate/CandidateProcessor";
 import { Server as HttpServer } from "http";
+import { IErrorReporter } from "../Common/IErrorReporter";
 const bodyParser = require("koa-bodyparser");
 
 export class Server {
@@ -12,16 +13,19 @@ export class Server {
   private parser: StartupJobsWebhookParser;
   private processor: CandiateProcessor;
   private runningServer?: HttpServer;
+  private errorReporter: IErrorReporter | undefined;
 
   constructor(
     parser: StartupJobsWebhookParser,
     processor: CandiateProcessor,
+    errorReporter: IErrorReporter | undefined,
     config: ServerConfig
   ) {
     this.config = config;
     this.parser = parser;
     this.processor = processor;
     this.server = new Koa();
+    this.errorReporter = errorReporter;
     this.server.use(bodyParser());
     // Logger
     this.server.use(async (ctx, next) => {
@@ -42,6 +46,13 @@ export class Server {
       } catch (err) {
         if (this.config.logErrors) {
           console.log(err);
+        }
+        if (this.errorReporter) {
+          this.errorReporter
+            .reportError(inspect((<any>ctx.request).body), err)
+            .catch(e => {
+              console.log(e);
+            });
         }
         ctx.status = err.statusCode || err.status || 500;
         ctx.body = {

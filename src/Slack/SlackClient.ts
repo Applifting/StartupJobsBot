@@ -39,7 +39,7 @@ export class SlackClient implements ISlackClient, IErrorReporter {
   }
   public reportError(payload: string, error: Error): Promise<any> {
     const slackPayload = {
-      text: `Startupjobsbot nedovedlo zpracovat webhook! :white_frowning_face:\n`,
+      text: `StartupJobsBot nedovedl zpracovat webhook! :white_frowning_face:\n`,
       attachments: [
         {
           fallback: ``,

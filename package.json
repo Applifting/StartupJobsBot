@@ -20,7 +20,7 @@
     "joi": "^14.3.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "reflect-metadata": "^0.1.12",
     "ts-node": "^8.0.3",
     "typescript": "^3.0.3"

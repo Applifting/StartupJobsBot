@@ -5,6 +5,7 @@ import url from "url";
 import { inspect } from "util";
 import { ISlackClient } from "./ISlackClient";
 import { IErrorReporter } from "../Common/IErrorReporter";
+import { sanitzeError } from "../Common/sanitizeError";
 
 export class SlackClient implements ISlackClient, IErrorReporter {
   private config: SlackConfig;
@@ -51,7 +52,7 @@ export class SlackClient implements ISlackClient, IErrorReporter {
           fallback: `Error`,
           color: "#FF0000",
           title: "Error :warning:",
-          text: inspect(error)
+          text: inspect(sanitzeError(error))
         }
       ]
     };

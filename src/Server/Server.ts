@@ -8,6 +8,7 @@ import { IErrorReporter } from "../Common/IErrorReporter";
 import { HealthCheck } from "../Healthcheck/Healthcheck";
 import { AppStatus } from "../Healthcheck/HealthCheckResult";
 const bodyParser = require("koa-bodyparser");
+const cors = require("@koa/cors");
 
 export class Server {
   private server: Koa;
@@ -32,6 +33,7 @@ export class Server {
     this.healthCheck = healthCheck;
     this.errorReporter = errorReporter;
     this.server.use(bodyParser());
+    this.server.use(cors());
     // Logger
     this.server.use(async (ctx, next) => {
       const start = Date.now();

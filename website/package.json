@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "next -p 3001",
     "build": "next build",
-    "export": "next export",
+    "export": "next build && next export",
     "start": "next start"
   }
 }

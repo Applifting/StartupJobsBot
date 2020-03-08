@@ -1,11 +1,14 @@
 import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import axios, { AxiosPromise } from "axios";
+import axios, { AxiosPromise, AxiosError } from "axios";
 import { SlackConfig } from "./SlackConfig";
 import url from "url";
 import { inspect } from "util";
 import { ISlackClient } from "./ISlackClient";
 import { IErrorReporter } from "../Common/IErrorReporter";
 import { sanitzeError } from "../Common/sanitizeError";
+import { SlackIntegrationCheckResult } from "./SlackIntegrationCheckResult";
+import Axios from "axios";
+import { isAxiosError } from "../Common/IsAxiosError";
 
 export class SlackClient implements ISlackClient, IErrorReporter {
   private config: SlackConfig;
@@ -19,9 +22,7 @@ export class SlackClient implements ISlackClient, IErrorReporter {
   ): AxiosPromise<any> {
     const title = this.config.messageTitle || "Nový kandidát!";
     const payload = {
-      text: `${title}\n${candididate.name} chce být ${
-        candididate.position
-      }\n\n\n:phone: ${candididate.phone}\n:email: ${candididate.email}\n`,
+      text: `${title}\n${candididate.name} chce být ${candididate.position}\n\n\n:phone: ${candididate.phone}\n:email: ${candididate.email}\n`,
       attachments: [
         {
           fallback: `${candididate.why}`,
@@ -73,5 +74,41 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     links.push(`<${candididate.details}|StartupJobs>`);
     const linksText = links.join(" | ");
     return linksText;
+  }
+
+  public async checkIntegration(): Promise<SlackIntegrationCheckResult> {
+    try {
+      const parsedUrl = url.parse(this.config.webhookUrl);
+      if (
+        parsedUrl.host == null ||
+        parsedUrl.host?.includes("slack.com") == false ||
+        parsedUrl.protocol != "https:"
+      ) {
+        throw new Error("URL is not https or does not lead to slack domain");
+      }
+    } catch (e) {
+      return SlackIntegrationCheckResult.INVALID_SLACK_URL;
+    }
+    try {
+      const res = await axios.request({
+        method: "options",
+        url: this.config.webhookUrl
+      });
+
+      return SlackIntegrationCheckResult.OK;
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if (e.response) {
+          const status = e.response.status;
+          if (status >= 500 && status < 600) {
+            return SlackIntegrationCheckResult.SLACK_NOT_AVAILABLE;
+          }
+          if (status == 403) {
+            return SlackIntegrationCheckResult.FORBIDDEN;
+          }
+        }
+      }
+    }
+    return SlackIntegrationCheckResult.UNKNOWN_ERROR;
   }
 }

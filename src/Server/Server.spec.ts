@@ -6,9 +6,8 @@ import { MockRecruiteeClient } from "../TestUtils/MockRecruiteeClient";
 import { webhookDevOffer } from "../TestUtils/offers";
 import axios from "axios";
 import { mrShark } from "../TestUtils/candidates";
-import { SlackClient } from "../Slack/SlackClient";
-import { RecruiteeClient } from "../Recruitee/RecruiteeClient";
 import { IErrorReporter } from "../Common/IErrorReporter";
+import { HealthCheck } from "../Healthcheck/Healthcheck";
 
 class InMemoryErrorReporter implements IErrorReporter {
   lastError: Error | undefined;
@@ -32,6 +31,7 @@ describe("Server", () => {
     server = new Server(
       new StartupJobsWebhookParser(),
       processor,
+      new HealthCheck(),
       inMemoryReporter,
       {
         port: 4000,

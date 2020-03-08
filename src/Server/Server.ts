@@ -5,6 +5,8 @@ import { inspect } from "util";
 import { CandiateProcessor } from "../Candidate/CandidateProcessor";
 import { Server as HttpServer } from "http";
 import { IErrorReporter } from "../Common/IErrorReporter";
+import { HealthCheck } from "../Healthcheck/Healthcheck";
+import { AppStatus } from "../Healthcheck/HealthCheckResult";
 const bodyParser = require("koa-bodyparser");
 
 export class Server {
@@ -14,10 +16,12 @@ export class Server {
   private processor: CandiateProcessor;
   private runningServer?: HttpServer;
   private errorReporter: IErrorReporter | undefined;
+  private healthCheck: HealthCheck;
 
   constructor(
     parser: StartupJobsWebhookParser,
     processor: CandiateProcessor,
+    healthCheck: HealthCheck,
     errorReporter: IErrorReporter | undefined,
     config: ServerConfig
   ) {
@@ -25,6 +29,7 @@ export class Server {
     this.parser = parser;
     this.processor = processor;
     this.server = new Koa();
+    this.healthCheck = healthCheck;
     this.errorReporter = errorReporter;
     this.server.use(bodyParser());
     // Logger
@@ -72,15 +77,26 @@ export class Server {
       }
       await next();
     });
+    // Health check
+    this.server.use(async (ctx, next) => {
+      if (ctx.path === "/health" && ctx.method === "GET") {
+        const checkResult = await healthCheck.checkHealth();
+        ctx.body = checkResult;
+        if (checkResult.status == AppStatus.UP) {
+          ctx.status = 200;
+        } else {
+          ctx.status = 503;
+        }
+      }
+      await next();
+    });
   }
 
   public start() {
     if (!this.runningServer) {
       this.runningServer = this.server.listen(this.config.port);
       console.log(
-        `StartupJobsBot started at port ${this.config.port} and webhook path ${
-          this.config.webhookPath
-        }`
+        `✅  StartupJobsBot started at port ${this.config.port} and webhook path ${this.config.webhookPath}`
       );
     } else {
       console.error("Server is already running!");

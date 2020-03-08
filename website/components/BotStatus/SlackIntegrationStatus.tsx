@@ -1,4 +1,4 @@
-import { SlackIntegrationCheckResult } from "../utils/apiModel";
+import { SlackIntegrationCheckResult } from "../../utils/apiModel";
 
 const SlackIntegrationStatus = (props: {
   status: SlackIntegrationCheckResult;

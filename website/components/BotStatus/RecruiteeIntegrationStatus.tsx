@@ -1,4 +1,4 @@
-import { RecruiteeIntegrationCheckResult } from "../utils/apiModel";
+import { RecruiteeIntegrationCheckResult } from "../../utils/apiModel";
 
 const RecruiteeIntegrationStatus = (props: {
   status: RecruiteeIntegrationCheckResult;

@@ -1,8 +1,8 @@
 import fetch from "isomorphic-unfetch";
 import { useEffect, useState } from "react";
-import { HealthCheckResult, AppStatus } from "../utils/apiModel";
+import { HealthCheckResult, AppStatus } from "../../utils/apiModel";
 import JSONView from "./JSONView";
-import { apiBasePath } from "../utils/apiBasePath";
+import { apiBasePath } from "../../utils/apiBasePath";
 import SlackIntegrationStatus from "./SlackIntegrationStatus";
 import RecruiteeIntegrationStatus from "./RecruiteeIntegrationStatus";
 import ModifyOnHerokuButton from "./ModifyOnHerokuButton";

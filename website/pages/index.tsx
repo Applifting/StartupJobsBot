@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import BotStatus from "../components/BotStatus";
+import BotStatus from "../components/BotStatus/BotStatus";
 
 const Home = () => {
   const { register, handleSubmit, watch, errors } = useForm();

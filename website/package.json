@@ -1,0 +1,22 @@
+{
+  "name": "deployer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^13.7.5",
+    "@types/react": "^16.9.23",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^9.2.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-hook-form": "^4.9.8",
+    "typescript": "^3.8.2"
+  },
+  "scripts": {
+    "dev": "next -p 3001",
+    "build": "next build",
+    "export": "next export",
+    "start": "next start"
+  }
+}

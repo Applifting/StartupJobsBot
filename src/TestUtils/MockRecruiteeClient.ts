@@ -3,14 +3,17 @@ import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { RecruiteeOffer } from "../Recruitee/RecruiteeOffer";
 import { UXDesignerOffer, webhookDevOffer } from "./offers";
+import { RecruiteeIntegrationCheckResult } from "../Recruitee/RecruiteeIntegrationCheckResult";
 
 export class MockRecruiteeClient implements IRecruiteeClient {
   public createCandidateCalled = false;
   public getOffersCalled = false;
   offers: RecruiteeOffer[];
+  opts: MockRecruiteeClientOpts;
 
-  constructor(offers: RecruiteeOffer[]) {
+  constructor(offers: RecruiteeOffer[], opts?: MockRecruiteeClientOpts) {
     this.offers = offers;
+    this.opts = opts || {};
   }
 
   createCandidateInRecruitee(
@@ -20,8 +23,19 @@ export class MockRecruiteeClient implements IRecruiteeClient {
     this.createCandidateCalled = true;
     return Promise.resolve({ status: 200, data: {} } as AxiosResponse);
   }
+
   getOffers(): Promise<RecruiteeOffer[]> {
     this.getOffersCalled = true;
     return Promise.resolve(this.offers);
   }
+
+  async checkIntegration(): Promise<RecruiteeIntegrationCheckResult> {
+    return (
+      this.opts.integrationCheckResult ?? RecruiteeIntegrationCheckResult.OK
+    );
+  }
+}
+
+export interface MockRecruiteeClientOpts {
+  integrationCheckResult?: RecruiteeIntegrationCheckResult;
 }

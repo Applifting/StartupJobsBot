@@ -3,8 +3,12 @@ import axios, { AxiosPromise } from "axios";
 import { DomainNormalizer } from "./DomainNormalizer";
 import { RecruiteeOffer } from "./RecruiteeOffer";
 import { RecruiteeConfig } from "./RecruiteeConfig";
+import { IRecruiteeClient } from "./IRecruiteeClient";
+import { RecruiteeIntegrationCheckResult } from "./RecruiteeIntegrationCheckResult";
+import { inspect } from "util";
+import { isAxiosError } from "../Common/IsAxiosError";
 
-export class RecruiteeClient {
+export class RecruiteeClient implements IRecruiteeClient {
   private config: RecruiteeConfig;
 
   constructor(config: RecruiteeConfig) {
@@ -60,5 +64,34 @@ export class RecruiteeClient {
         }
       )
       .then((r: any) => r.data.offers);
+  }
+
+  public async checkIntegration(): Promise<RecruiteeIntegrationCheckResult> {
+    try {
+      // This endpoint is used for its fast response times for the HEAD http verb
+      const response = await axios.head(
+        `https://api.recruitee.com/c/${DomainNormalizer.normalize(
+          this.config.companyDomain
+        )}/countries`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.config.accessToken}`
+          }
+        }
+      );
+      return RecruiteeIntegrationCheckResult.OK;
+    } catch (e) {
+      if (isAxiosError(e)) {
+        const status = e.response?.status;
+        if (status && status >= 500 && status < 600) {
+          return RecruiteeIntegrationCheckResult.RECRUITEE_NOT_AVAILABLE;
+        } else if (status == 401) {
+          return RecruiteeIntegrationCheckResult.BAD_ACCESS_TOKEN;
+        } else if (status == 403) {
+          return RecruiteeIntegrationCheckResult.BAD_COMPANY_DOMAIN;
+        }
+      }
+    }
+    return RecruiteeIntegrationCheckResult.UNKNOWN_ERROR;
   }
 }

@@ -16,7 +16,9 @@ export class CandiateProcessor {
     this.slack = slack;
     this.recruitee = recruitee;
     if (!this.recruitee && !this.slack) {
-      throw new Error("Neither Slack or Recruitee are enabled. Aborting");
+      throw new Error(
+        "Neither Slack or Recruitee are enabled. Aborting. Set either SLACK_WEBHOOK_URL or RECRUITEE_ACCESS_TOKEN, RECRUITEE_DOMAIN."
+      );
     }
   }
 
@@ -36,9 +38,7 @@ export class CandiateProcessor {
       } else {
         throw new AppError(
           500,
-          `Unable to match ${payload.position} (${
-            payload.internalPositionName
-          }) to any Recruitee offer`
+          `Unable to match ${payload.position} (${payload.internalPositionName}) to any Recruitee offer`
         );
       }
     }

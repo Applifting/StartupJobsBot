@@ -29,7 +29,7 @@
       "required": false
     },
     "SLACK_REPORT_ERRORS": {
-      "description": "Should errors be reported into slack? Default is false. Set to 'true' if you want to have it turned on.",
+      "description": "Should errors be reported into slack? Default is true. Set to 'false' if you want to have it turned on.",
       "value": "true",
       "required": false
     },

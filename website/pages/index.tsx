@@ -6,7 +6,7 @@ const Home = () => {
   const current = watch();
   return (
     <div>
-      <h1>Hello world!</h1>
+      <h1>🤖 Startup Jobs Bot</h1>
       <BotStatus></BotStatus>
     </div>
   );

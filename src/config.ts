@@ -1,7 +1,9 @@
 import { ServerConfig } from "./Server/ServerConfig";
 import { SlackConfig } from "./Slack/SlackConfig";
 import { RecruiteeConfig } from "./Recruitee/RecruiteeConfig";
-import { boolean } from "joi";
+import * as dotenv from 'dotenv';
+
+dotenv.config()
 
 export interface Config {
   server: ServerConfig;

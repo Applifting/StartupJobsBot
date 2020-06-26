@@ -18,22 +18,22 @@ export class SlackClient implements ISlackClient, IErrorReporter {
   }
 
   public sendCandidateToSlack(
-    candididate: StartupJobsPayload
+    candidate: StartupJobsPayload
   ): AxiosPromise<any> {
     const title = this.config.messageTitle || "Nový kandidát!";
     const payload = {
-      text: `${title}\n${candididate.name} chce být ${candididate.position}\n\n\n:phone: ${candididate.phone}\n:email: ${candididate.email}\n`,
+      text: `${title}\n${candidate.name} chce být ${candidate.position}\n\n\n:phone: ${candidate.phone}\n:email: ${candidate.email}\n`,
       attachments: [
         {
-          fallback: `${candididate.why}`,
+          fallback: `${candidate.why}`,
           color: "#6B97CA",
           title: "Proč já:question:",
-          text: `${candididate.why}`
+          text: `${candidate.why}`
         },
         {
-          fallback: `${candididate.details}`,
+          fallback: `${candidate.details}`,
           title: "Odkazy",
-          text: SlackClient.assembleLinks(candididate)
+          text: SlackClient.assembleLinks(candidate)
         }
       ]
     };
@@ -60,18 +60,18 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     return axios.post(this.config.webhookUrl, slackPayload);
   }
 
-  public static assembleLinks(candididate: StartupJobsPayload): string {
+  public static assembleLinks(candidate: StartupJobsPayload): string {
     const links: string[] = [];
-    if (candididate.files) {
-      candididate.files.map(f => {
+    if (candidate.files) {
+      candidate.files.map(f => {
         const name = decodeURIComponent(<string>url.parse(f, true).query!.file);
         links.push(`<${f}|${name}>`);
       });
     }
-    if (candididate.linkedin) {
-      links.push(`<${candididate.linkedin}|LinkedIn>`);
+    if (candidate.linkedin) {
+      links.push(`<${candidate.linkedin}|LinkedIn>`);
     }
-    links.push(`<${candididate.details}|StartupJobs>`);
+    links.push(`<${candidate.details}|${candidate.source ? candidate.source : 'StartupJobs'}>`);
     const linksText = links.join(" | ");
     return linksText;
   }

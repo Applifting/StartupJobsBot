@@ -1,6 +1,9 @@
 import { ServerConfig } from "./Server/ServerConfig";
 import { SlackConfig } from "./Slack/SlackConfig";
 import { RecruiteeConfig } from "./Recruitee/RecruiteeConfig";
+import * as dotenv from 'dotenv';
+
+dotenv.config()
 
 export interface Config {
   server: ServerConfig;
@@ -24,7 +27,8 @@ export const getConfig = (): Config => {
   if (slackWebhookUrl) {
     slackConfig = {
       webhookUrl: slackWebhookUrl,
-      messageTitle: process.env.SLACK_MESSAGE_TITLE
+      messageTitle: process.env.SLACK_MESSAGE_TITLE,
+      reportErrors: process.env.SLACK_REPORT_ERRORS === "true" || false
     };
   }
   return {

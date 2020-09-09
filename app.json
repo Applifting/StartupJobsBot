@@ -1,6 +1,47 @@
 {
   "name": "StartupJobsBot",
-  "description": "Tiny service that takes candidate webhook from Startupsjob and announces the candidate on Slack and adds it to Recruitee.",
+  "description": "Tiny service that takes candidate webhook from Startupsjob and announces the candidate on Slack and adds them to Recruitee.",
   "repository": "https://github.com/Applifting/StartupJobsBot",
-  "keywords": ["startupjobs", "slack", "recruitee" ,"node", "typescript", "koa"]
+  "keywords": [
+    "startupjobs",
+    "slack",
+    "recruitee",
+    "node",
+    "typescript",
+    "koa"
+  ],
+  "env": {
+    "RECRUITEE_ACCESS_TOKEN": {
+      "description": "Access token for Recruitee. Required if you want to integrate with Recruitee. Look to official documentation on how to obtain it: https://docs.recruitee.com/reference#reference-getting-started",
+      "required": false
+    },
+    "RECRUITEE_DOMAIN": {
+      "description": "Recruitee domain for your company. Required if you want to integrate with Recruitee. Example: 'appliftingsro'",
+      "required": false
+    },
+    "SLACK_WEBHOOK_URL": {
+      "description": "Incoming webhook integration url from Slack. See: https://api.slack.com/messaging/webhooks on how to se it up.",
+      "required": true
+    },
+    "SLACK_MESSAGE_TITLE": {
+      "description": "Customize the title of slack notification about new candidate",
+      "value": "Nový wannabe Applifter!",
+      "required": false
+    },
+    "SLACK_REPORT_ERRORS": {
+      "description": "Should errors be reported into slack? Default is false. Set to 'true' if you want to have it turned on.",
+      "value": "true",
+      "required": false
+    },
+    "LOG_REQUESTS": {
+      "description": "Log requests into console. On by default. Set to 'false' to turn it onff.",
+      "value": "true",
+      "required": false
+    },
+    "LOG_PAYLOADS": {
+      "description": "Log request payloads into console. Set to 'true' to turn it on.",
+      "value": "false",
+      "required": false
+    }
+  }
 }

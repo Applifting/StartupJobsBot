@@ -6,25 +6,41 @@ import { MockRecruiteeClient } from "../TestUtils/MockRecruiteeClient";
 import { webhookDevOffer } from "../TestUtils/offers";
 import axios from "axios";
 import { mrShark } from "../TestUtils/candidates";
-import { SlackClient } from "../Slack/SlackClient";
-import { RecruiteeClient } from "../Recruitee/RecruiteeClient";
+import { IErrorReporter } from "../Common/IErrorReporter";
+import { HealthCheck } from "../Healthcheck/Healthcheck";
+
+class InMemoryErrorReporter implements IErrorReporter {
+  lastError: Error | undefined;
+
+  async reportError(payload: string, error: Error): Promise<void> {
+    this.lastError = error;
+  }
+}
 
 describe("Server", () => {
   let server: Server;
   let slack: MockSlackClient;
   let recruitee: MockRecruiteeClient;
+  let inMemoryReporter: InMemoryErrorReporter;
 
   beforeEach(async () => {
+    inMemoryReporter = new InMemoryErrorReporter();
     slack = new MockSlackClient();
     recruitee = new MockRecruiteeClient([webhookDevOffer]);
     const processor = new CandiateProcessor(slack, recruitee);
-    server = new Server(new StartupJobsWebhookParser(), processor, {
-      port: 4000,
-      logPayloads: false,
-      logErrors: false,
-      logRequests: false,
-      webhookPath: "/testWebhook"
-    });
+    server = new Server(
+      new StartupJobsWebhookParser(),
+      processor,
+      new HealthCheck(),
+      inMemoryReporter,
+      {
+        port: 4000,
+        logPayloads: false,
+        logErrors: false,
+        logRequests: false,
+        webhookPath: "/testWebhook"
+      }
+    );
     server.start();
   });
 
@@ -53,6 +69,7 @@ describe("Server", () => {
         });
         fail();
       } catch (e) {
+        expect(inMemoryReporter.lastError).toBeDefined();
         expect(e.response.status).toBe(400);
       }
     });

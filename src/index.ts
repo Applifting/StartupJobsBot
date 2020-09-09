@@ -4,14 +4,40 @@ import { CandiateProcessor } from "./Candidate/CandidateProcessor";
 import { SlackClient } from "./Slack/SlackClient";
 import { RecruiteeClient } from "./Recruitee/RecruiteeClient";
 import { getConfig } from "./config";
+import { IErrorReporter } from "./Common/IErrorReporter";
+import { HealthCheck } from "./Healthcheck/Healthcheck";
 
 const config = getConfig();
 const parser = new StartupJobsWebhookParser();
+const slack = config.slack && new SlackClient(config.slack);
+const recruitee = config.recruitee && new RecruiteeClient(config.recruitee);
+const processor = new CandiateProcessor(slack, recruitee);
+const healthCheck = new HealthCheck(slack, recruitee);
 
-const processor = new CandiateProcessor(
-  config.slack && new SlackClient(config.slack),
-  config.recruitee && new RecruiteeClient(config.recruitee)
+let errorReporter: IErrorReporter | undefined;
+if (config.slack && config.slack.reportErrors) {
+  errorReporter = slack;
+}
+
+const server = new Server(
+  parser,
+  processor,
+  healthCheck,
+  errorReporter,
+  config.server
 );
-const server = new Server(parser, processor, config.server);
+console.log("⏳  StartupJobsBot is starting...");
+if (recruitee) {
+  console.log(
+    `✅  Recruitee is enabled for company domain ${config.recruitee?.companyDomain}`
+  );
+} else {
+  console.log("➖  Recruitee integration is not set up");
+}
+if (slack) {
+  console.log(`✅  Slack is enabled`);
+} else {
+  console.log("➖  Slack integration is not set up");
+}
 
 server.start();

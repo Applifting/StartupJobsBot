@@ -34,6 +34,8 @@ export interface StartupJobsPayload {
   files: string[];
   /// True/False
   gdpr_accepted: boolean;
+  /// STARTUPJOBS
+  source?: "SMITIO" | undefined
 }
 
 export const startupJobsPayloadSchema = Joi.object().keys({
@@ -46,7 +48,10 @@ export const startupJobsPayloadSchema = Joi.object().keys({
   position: Joi.string()
     .required()
     .trim(),
-  why: Joi.string().trim(),
+
+  why: Joi.string()
+    .trim()
+    .allow(null),
   phone: Joi.string().allow(""),
   email: Joi.string()
     .email()
@@ -54,8 +59,11 @@ export const startupJobsPayloadSchema = Joi.object().keys({
   details: Joi.string().required(),
   linkedin: Joi.string()
     .trim()
-    .allow(""),
-  internalPositionName: Joi.string().trim(),
+    .allow(null, ""),
+  internalPositionName: Joi.string()
+    .trim()
+    .allow(null),
   files: Joi.array().items(Joi.string()),
-  gdpr_accepted: Joi.boolean().required()
+  gdpr_accepted: Joi.boolean().required(),
+  source: Joi.string().valid(['SMITIO'])
 });

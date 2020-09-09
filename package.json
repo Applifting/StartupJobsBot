@@ -8,13 +8,14 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "tsc": "tsc",
-    "build": "rm -rf ./build",
+    "build": "rm -rf ./build && tsc",
     "lint": "tslint -p . -c tslint.json -t verbose --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage"
   },
   "engines": {
-    "node": "12.18.1"
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
   },
   "dependencies": {
     "@types/joi": "^14.3.2",

@@ -8,7 +8,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "tsc": "tsc",
-    "build": "rm -rf build && yarn tsc",
+    "build": "rm -rf ./build",
     "lint": "tslint -p . -c tslint.json -t verbose --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage"

@@ -1,9 +1,9 @@
-import { ServerConfig } from "./Server/ServerConfig";
-import { SlackConfig } from "./Slack/SlackConfig";
-import { RecruiteeConfig } from "./Recruitee/RecruiteeConfig";
+import { ServerConfig } from './Server/ServerConfig';
+import { SlackConfig } from './Slack/SlackConfig';
+import { RecruiteeConfig } from './Recruitee/RecruiteeConfig';
 import * as dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 export interface Config {
   server: ServerConfig;
@@ -18,7 +18,7 @@ export const getConfig = (): Config => {
   if (recruiteeAccessToken && recruiteeDomain) {
     recruiteeConfig = {
       accessToken: recruiteeAccessToken,
-      companyDomain: recruiteeDomain
+      companyDomain: recruiteeDomain,
     };
   }
 
@@ -28,18 +28,18 @@ export const getConfig = (): Config => {
     slackConfig = {
       webhookUrl: slackWebhookUrl,
       messageTitle: process.env.SLACK_MESSAGE_TITLE,
-      reportErrors: process.env.SLACK_REPORT_ERRORS === "true" || false
+      reportErrors: process.env.SLACK_REPORT_ERRORS === 'true' || false,
     };
   }
   return {
     server: {
-      port: Number.parseInt(process.env.PORT || "3000"),
+      port: Number.parseInt(process.env.PORT || '3000'),
       logErrors: true,
-      logPayloads: process.env.LOG_PAYLOADS === "true" || false,
-      logRequests: process.env.LOG_REQUESTS === "true" || true,
-      webhookPath: process.env.WEBHOOK_PATH || "/webhook"
+      logPayloads: process.env.LOG_PAYLOADS === 'true' || false,
+      logRequests: process.env.LOG_REQUESTS === 'true' || true,
+      webhookPath: process.env.WEBHOOK_PATH || '/webhook',
     },
     recruitee: recruiteeConfig,
-    slack: slackConfig
+    slack: slackConfig,
   };
 };

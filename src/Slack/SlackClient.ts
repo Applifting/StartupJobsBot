@@ -1,14 +1,13 @@
-import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import axios, { AxiosPromise, AxiosError } from "axios";
-import { SlackConfig } from "./SlackConfig";
-import url from "url";
-import { inspect } from "util";
-import { ISlackClient } from "./ISlackClient";
-import { IErrorReporter } from "../Common/IErrorReporter";
-import { sanitzeError } from "../Common/sanitizeError";
-import { SlackIntegrationCheckResult } from "./SlackIntegrationCheckResult";
-import Axios from "axios";
-import { isAxiosError } from "../Common/IsAxiosError";
+import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+import axios, { AxiosPromise } from 'axios';
+import { SlackConfig } from './SlackConfig';
+import * as url from 'url';
+import { inspect } from 'util';
+import { ISlackClient } from './ISlackClient';
+import { IErrorReporter } from '../Common/IErrorReporter';
+import { sanitzeError } from '../Common/sanitizeError';
+import { SlackIntegrationCheckResult } from './SlackIntegrationCheckResult';
+import { isAxiosError } from '../Common/isAxiosError';
 
 export class SlackClient implements ISlackClient, IErrorReporter {
   private config: SlackConfig;
@@ -17,25 +16,23 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     this.config = config;
   }
 
-  public sendCandidateToSlack(
-    candidate: StartupJobsPayload
-  ): AxiosPromise<any> {
-    const title = this.config.messageTitle || "Nový kandidát!";
+  public sendCandidateToSlack(candidate: StartupJobsPayload): AxiosPromise<any> {
+    const title = this.config.messageTitle || 'Nový kandidát!';
     const payload = {
       text: `${title}\n${candidate.name} chce být ${candidate.position}\n\n\n:phone: ${candidate.phone}\n:email: ${candidate.email}\n`,
       attachments: [
         {
           fallback: `${candidate.why}`,
-          color: "#6B97CA",
-          title: "Proč já:question:",
-          text: `${candidate.why}`
+          color: '#6B97CA',
+          title: 'Proč já:question:',
+          text: `${candidate.why}`,
         },
         {
           fallback: `${candidate.details}`,
-          title: "Odkazy",
-          text: SlackClient.assembleLinks(candidate)
-        }
-      ]
+          title: 'Odkazy',
+          text: SlackClient.assembleLinks(candidate),
+        },
+      ],
     };
     return axios.post(this.config.webhookUrl, payload);
   }
@@ -45,17 +42,17 @@ export class SlackClient implements ISlackClient, IErrorReporter {
       attachments: [
         {
           fallback: ``,
-          color: "#6B97CA",
-          title: "Payload :package:",
-          text: payload
+          color: '#6B97CA',
+          title: 'Payload :package:',
+          text: payload,
         },
         {
           fallback: `Error`,
-          color: "#FF0000",
-          title: "Error :warning:",
-          text: inspect(sanitzeError(error))
-        }
-      ]
+          color: '#FF0000',
+          title: 'Error :warning:',
+          text: inspect(sanitzeError(error)),
+        },
+      ],
     };
     return axios.post(this.config.webhookUrl, slackPayload);
   }
@@ -63,7 +60,7 @@ export class SlackClient implements ISlackClient, IErrorReporter {
   public static assembleLinks(candidate: StartupJobsPayload): string {
     const links: string[] = [];
     if (candidate.files) {
-      candidate.files.map(f => {
+      candidate.files.map((f) => {
         const name = decodeURIComponent(<string>url.parse(f, true).query!.file);
         links.push(`<${f}|${name}>`);
       });
@@ -72,27 +69,23 @@ export class SlackClient implements ISlackClient, IErrorReporter {
       links.push(`<${candidate.linkedin}|LinkedIn>`);
     }
     links.push(`<${candidate.details}|${candidate.source ? candidate.source : 'StartupJobs'}>`);
-    const linksText = links.join(" | ");
+    const linksText = links.join(' | ');
     return linksText;
   }
 
   public async checkIntegration(): Promise<SlackIntegrationCheckResult> {
     try {
       const parsedUrl = url.parse(this.config.webhookUrl);
-      if (
-        parsedUrl.host == null ||
-        parsedUrl.host?.includes("slack.com") == false ||
-        parsedUrl.protocol != "https:"
-      ) {
-        throw new Error("URL is not https or does not lead to slack domain");
+      if (parsedUrl.host == null || parsedUrl.host?.includes('slack.com') == false || parsedUrl.protocol != 'https:') {
+        throw new Error('URL is not https or does not lead to slack domain');
       }
     } catch (e) {
       return SlackIntegrationCheckResult.INVALID_SLACK_URL;
     }
     try {
       const res = await axios.request({
-        method: "options",
-        url: this.config.webhookUrl
+        method: 'options',
+        url: this.config.webhookUrl,
       });
 
       return SlackIntegrationCheckResult.OK;

@@ -1,10 +1,10 @@
-import { CandiateProcessor } from "./CandidateProcessor";
-import { MockSlackClient } from "../TestUtils/MockSlackClient";
-import { MockRecruiteeClient } from "../TestUtils/MockRecruiteeClient";
-import { mrShark } from "../TestUtils/candidates";
-import { UXDesignerOffer, webhookDevOffer } from "../TestUtils/offers";
+import { CandiateProcessor } from './CandidateProcessor';
+import { MockSlackClient } from '../TestUtils/MockSlackClient';
+import { MockRecruiteeClient } from '../TestUtils/MockRecruiteeClient';
+import { mrShark } from '../TestUtils/candidates';
+import { UXDesignerOffer, webhookDevOffer } from '../TestUtils/offers';
 
-describe("CandidateProcessor", () => {
+describe('CandidateProcessor', () => {
   let processor: CandiateProcessor;
   let slackMock: MockSlackClient;
   let recruiteeMock: MockRecruiteeClient;
@@ -14,12 +14,12 @@ describe("CandidateProcessor", () => {
     processor = new CandiateProcessor(slackMock, recruiteeMock);
   });
 
-  it("throws an error when no offer is matched", async () => {
+  it('throws an error when no offer is matched', async () => {
     recruiteeMock.offers = [UXDesignerOffer];
     await expect(processor.process(mrShark)).rejects.toThrow();
   });
 
-  it("processes candidate and sends it to slack and recruitee", async () => {
+  it('processes candidate and sends it to slack and recruitee', async () => {
     await processor.process(mrShark);
     expect(slackMock.sendCandidateToSlackCalled).toBe(true);
     expect(recruiteeMock.getOffersCalled).toBe(true);

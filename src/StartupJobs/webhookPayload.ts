@@ -1,5 +1,4 @@
-import Joi from "joi";
-import { join } from "path";
+import * as Joi from 'joi';
 /*
  Webhooks
 Na StartupJobs.cz můžete využít webhooks pro získání informace o přihlášeném zájemci. 
@@ -35,7 +34,7 @@ export interface StartupJobsPayload {
   /// True/False
   gdpr_accepted: boolean;
   /// STARTUPJOBS
-  source?: "SMITIO" | undefined
+  source?: 'SMITIO' | undefined;
 }
 
 export const startupJobsPayloadSchema = Joi.object().keys({
@@ -52,18 +51,18 @@ export const startupJobsPayloadSchema = Joi.object().keys({
   why: Joi.string()
     .trim()
     .allow(null),
-  phone: Joi.string().allow(""),
+  phone: Joi.string().allow(''),
   email: Joi.string()
     .email()
     .trim(),
   details: Joi.string().required(),
   linkedin: Joi.string()
     .trim()
-    .allow(null, ""),
+    .allow(null, ''),
   internalPositionName: Joi.string()
     .trim()
     .allow(null),
   files: Joi.array().items(Joi.string()),
   gdpr_accepted: Joi.boolean().required(),
-  source: Joi.string().valid(['SMITIO'])
+  source: Joi.string().valid(['SMITIO']),
 });

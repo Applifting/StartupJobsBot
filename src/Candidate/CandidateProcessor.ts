@@ -1,9 +1,9 @@
-import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import { CandidateAnonymizer } from "./CandidateAnonymizer";
-import { CandidateMatcher } from "../Recruitee/CandidateMatcher";
-import { AppError } from "../Common/AppError";
-import { IRecruiteeClient } from "../Recruitee/IRecruiteeClient";
-import { ISlackClient } from "../Slack/ISlackClient";
+import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+import { CandidateAnonymizer } from './CandidateAnonymizer';
+import { CandidateMatcher } from '../Recruitee/CandidateMatcher';
+import { AppError } from '../Common/AppError';
+import { IRecruiteeClient } from '../Recruitee/IRecruiteeClient';
+import { ISlackClient } from '../Slack/ISlackClient';
 
 /**
  * Takes normalized StartupJobs payload and sends it to Slack and Recruitee
@@ -16,16 +16,14 @@ export class CandiateProcessor {
     this.slack = slack;
     this.recruitee = recruitee;
     if (!this.recruitee && !this.slack) {
-      throw new Error("Neither Slack or Recruitee are enabled. Aborting");
+      throw new Error('Neither Slack or Recruitee are enabled. Aborting');
     }
   }
 
   public async process(payload: StartupJobsPayload) {
     const anonymizer = new CandidateAnonymizer();
     if (this.slack) {
-      await this.slack.sendCandidateToSlack(
-        payload.gdpr_accepted ? payload : anonymizer.anonymize(payload)
-      );
+      await this.slack.sendCandidateToSlack(payload.gdpr_accepted ? payload : anonymizer.anonymize(payload));
     }
     if (this.recruitee) {
       const matcher = new CandidateMatcher();
@@ -34,12 +32,7 @@ export class CandiateProcessor {
       if (offerId) {
         await this.recruitee.createCandidateInRecruitee(offerId, payload);
       } else {
-        throw new AppError(
-          500,
-          `Unable to match ${payload.position} (${
-            payload.internalPositionName
-          }) to any Recruitee offer`
-        );
+        throw new AppError(500, `Unable to match ${payload.position} (${payload.internalPositionName}) to any Recruitee offer`);
       }
     }
   }

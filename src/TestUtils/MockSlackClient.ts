@@ -1,7 +1,7 @@
-import { ISlackClient } from "../Slack/ISlackClient";
-import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import { AxiosPromise, AxiosResponse } from "axios";
-import { SlackIntegrationCheckResult } from "../Slack/SlackIntegrationCheckResult";
+import { ISlackClient } from '../Slack/ISlackClient';
+import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+import { AxiosPromise, AxiosResponse } from 'axios';
+import { SlackIntegrationCheckResult } from '../Slack/SlackIntegrationCheckResult';
 
 export class MockSlackClient implements ISlackClient {
   private opts: MockSlackClientOpts;

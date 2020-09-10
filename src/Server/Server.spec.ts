@@ -1,13 +1,13 @@
-import { Server } from "./Server";
-import { StartupJobsWebhookParser } from "../StartupJobs/StartupJobsWebhookParser";
-import { CandiateProcessor } from "../Candidate/CandidateProcessor";
-import { MockSlackClient } from "../TestUtils/MockSlackClient";
-import { MockRecruiteeClient } from "../TestUtils/MockRecruiteeClient";
-import { webhookDevOffer } from "../TestUtils/offers";
-import axios from "axios";
-import { mrShark } from "../TestUtils/candidates";
-import { IErrorReporter } from "../Common/IErrorReporter";
-import { HealthCheck } from "../Healthcheck/Healthcheck";
+import { Server } from './Server';
+import { StartupJobsWebhookParser } from '../StartupJobs/StartupJobsWebhookParser';
+import { CandiateProcessor } from '../Candidate/CandidateProcessor';
+import { MockSlackClient } from '../TestUtils/MockSlackClient';
+import { MockRecruiteeClient } from '../TestUtils/MockRecruiteeClient';
+import { webhookDevOffer } from '../TestUtils/offers';
+import axios from 'axios';
+import { mrShark } from '../TestUtils/candidates';
+import { IErrorReporter } from '../Common/IErrorReporter';
+import { HealthCheck } from '../HealthCheck/HealthCheck';
 
 class InMemoryErrorReporter implements IErrorReporter {
   lastError: Error | undefined;
@@ -17,7 +17,7 @@ class InMemoryErrorReporter implements IErrorReporter {
   }
 }
 
-describe("Server", () => {
+describe('Server', () => {
   let server: Server;
   let slack: MockSlackClient;
   let recruitee: MockRecruiteeClient;
@@ -28,19 +28,13 @@ describe("Server", () => {
     slack = new MockSlackClient();
     recruitee = new MockRecruiteeClient([webhookDevOffer]);
     const processor = new CandiateProcessor(slack, recruitee);
-    server = new Server(
-      new StartupJobsWebhookParser(),
-      processor,
-      new HealthCheck(),
-      inMemoryReporter,
-      {
-        port: 4000,
-        logPayloads: false,
-        logErrors: false,
-        logRequests: false,
-        webhookPath: "/testWebhook"
-      }
-    );
+    server = new Server(new StartupJobsWebhookParser(), processor, new HealthCheck(), inMemoryReporter, {
+      port: 4000,
+      logPayloads: false,
+      logErrors: false,
+      logRequests: false,
+      webhookPath: '/testWebhook',
+    });
     server.start();
   });
 
@@ -48,24 +42,21 @@ describe("Server", () => {
     await server.stop();
   });
 
-  describe("valid requests", () => {
-    it("processes valid webhook request", async () => {
-      const response = await axios.post(
-        "http://localhost:4000/testWebhook",
-        mrShark
-      );
+  describe('valid requests', () => {
+    it('processes valid webhook request', async () => {
+      const response = await axios.post('http://localhost:4000/testWebhook', mrShark);
       expect(response.status).toBe(200);
       expect(slack.sendCandidateToSlackCalled).toBe(true);
       expect(recruitee.createCandidateCalled).toBe(true);
     });
   });
 
-  describe("invalid requests", () => {
-    it("fails 400 when invalid request is sent", async () => {
+  describe('invalid requests', () => {
+    it('fails 400 when invalid request is sent', async () => {
       try {
-        const response = await axios.post("http://localhost:4000/testWebhook", {
+        const response = await axios.post('http://localhost:4000/testWebhook', {
           ...mrShark,
-          name: undefined
+          name: undefined,
         });
         fail();
       } catch (e) {

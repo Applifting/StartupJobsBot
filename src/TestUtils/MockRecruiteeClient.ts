@@ -1,9 +1,8 @@
-import { IRecruiteeClient } from "../Recruitee/IRecruiteeClient";
-import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import { AxiosPromise, AxiosResponse } from "axios";
-import { RecruiteeOffer } from "../Recruitee/RecruiteeOffer";
-import { UXDesignerOffer, webhookDevOffer } from "./offers";
-import { RecruiteeIntegrationCheckResult } from "../Recruitee/RecruiteeIntegrationCheckResult";
+import { IRecruiteeClient } from '../Recruitee/IRecruiteeClient';
+import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+import { AxiosPromise, AxiosResponse } from 'axios';
+import { RecruiteeOffer } from '../Recruitee/RecruiteeOffer';
+import { RecruiteeIntegrationCheckResult } from '../Recruitee/RecruiteeIntegrationCheckResult';
 
 export class MockRecruiteeClient implements IRecruiteeClient {
   public createCandidateCalled = false;
@@ -16,10 +15,7 @@ export class MockRecruiteeClient implements IRecruiteeClient {
     this.opts = opts || {};
   }
 
-  createCandidateInRecruitee(
-    offerId: number,
-    candidate: StartupJobsPayload
-  ): AxiosPromise<any> {
+  createCandidateInRecruitee(offerId: number, candidate: StartupJobsPayload): AxiosPromise<any> {
     this.createCandidateCalled = true;
     return Promise.resolve({ status: 200, data: {} } as AxiosResponse);
   }
@@ -30,9 +26,7 @@ export class MockRecruiteeClient implements IRecruiteeClient {
   }
 
   async checkIntegration(): Promise<RecruiteeIntegrationCheckResult> {
-    return (
-      this.opts.integrationCheckResult ?? RecruiteeIntegrationCheckResult.OK
-    );
+    return this.opts.integrationCheckResult ?? RecruiteeIntegrationCheckResult.OK;
   }
 }
 

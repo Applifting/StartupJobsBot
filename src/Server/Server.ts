@@ -1,13 +1,13 @@
-import Koa from "koa";
-import { ServerConfig } from "./ServerConfig";
-import { StartupJobsWebhookParser } from "../StartupJobs/StartupJobsWebhookParser";
-import { inspect } from "util";
-import { CandiateProcessor } from "../Candidate/CandidateProcessor";
-import { Server as HttpServer } from "http";
-import { IErrorReporter } from "../Common/IErrorReporter";
-import { HealthCheck } from "../Healthcheck/Healthcheck";
-import { AppStatus } from "../Healthcheck/HealthCheckResult";
-const bodyParser = require("koa-bodyparser");
+import * as Koa from 'koa';
+import { ServerConfig } from './ServerConfig';
+import { StartupJobsWebhookParser } from '../StartupJobs/StartupJobsWebhookParser';
+import { inspect } from 'util';
+import { CandiateProcessor } from '../Candidate/CandidateProcessor';
+import { Server as HttpServer } from 'http';
+import { IErrorReporter } from '../Common/IErrorReporter';
+import { HealthCheck } from '../HealthCheck/HealthCheck';
+import { AppStatus } from '../HealthCheck/HealthCheckResult';
+const bodyParser = require('koa-bodyparser');
 
 export class Server {
   private server: Koa;
@@ -53,24 +53,20 @@ export class Server {
           console.log(err);
         }
         if (this.errorReporter) {
-          this.errorReporter
-            .reportError(inspect((<any>ctx.request).body), err)
-            .catch(e => {
-              console.log(e);
-            });
+          this.errorReporter.reportError(inspect((<any>ctx.request).body), err).catch((e) => {
+            console.log(e);
+          });
         }
         ctx.status = err.statusCode || err.status || 500;
         ctx.body = {
-          message: err.message
+          message: err.message,
         };
       }
     });
     // Webhook
     this.server.use(async (ctx, next) => {
-      const endpoint = this.config.webhookPath.startsWith("/")
-        ? this.config.webhookPath
-        : `/${this.config.webhookPath}`;
-      if (endpoint === ctx.path && ctx.method === "POST") {
+      const endpoint = this.config.webhookPath.startsWith('/') ? this.config.webhookPath : `/${this.config.webhookPath}`;
+      if (endpoint === ctx.path && ctx.method === 'POST') {
         const payload = this.parser.parse((<any>ctx.request).body);
         await this.processor.process(payload);
         ctx.status = 200;
@@ -79,7 +75,7 @@ export class Server {
     });
     // Health check
     this.server.use(async (ctx, next) => {
-      if (ctx.path === "/health" && ctx.method === "GET") {
+      if (ctx.path === '/health' && ctx.method === 'GET') {
         const checkResult = await healthCheck.checkHealth();
         ctx.body = checkResult;
         if (checkResult.status == AppStatus.UP) {
@@ -95,11 +91,9 @@ export class Server {
   public start() {
     if (!this.runningServer) {
       this.runningServer = this.server.listen(this.config.port);
-      console.log(
-        `✅  StartupJobsBot started at port ${this.config.port} and webhook path ${this.config.webhookPath}`
-      );
+      console.log(`✅  StartupJobsBot started at port ${this.config.port} and webhook path ${this.config.webhookPath}`);
     } else {
-      console.error("Server is already running!");
+      console.error('Server is already running!');
     }
   }
 
@@ -108,7 +102,7 @@ export class Server {
       if (this.runningServer) {
         this.runningServer.close(() => {
           res();
-          console.log("Server stopped");
+          console.log('Server stopped');
           return;
         });
       }

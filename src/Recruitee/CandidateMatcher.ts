@@ -1,11 +1,8 @@
-import { StartupJobsPayload } from "../StartupJobs/webhookPayload";
-import { RecruiteeOffer } from "./RecruiteeOffer";
+import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+import { RecruiteeOffer } from './RecruiteeOffer';
 
 export class CandidateMatcher {
-  public matchCandidateToOfferId(
-    candidate: StartupJobsPayload,
-    offers: RecruiteeOffer[]
-  ): number | undefined {
+  public matchCandidateToOfferId(candidate: StartupJobsPayload, offers: RecruiteeOffer[]): number | undefined {
     if (candidate.internalPositionName) {
       const matchByInternalPositionName = this.matchCandidatePropertyToOffer(
         candidate.internalPositionName.toLocaleLowerCase().trim(),
@@ -16,10 +13,7 @@ export class CandidateMatcher {
       }
     }
     if (candidate.position) {
-      const matchByPositionName = this.matchCandidatePropertyToOffer(
-        candidate.position.toLocaleLowerCase().trim(),
-        offers
-      );
+      const matchByPositionName = this.matchCandidatePropertyToOffer(candidate.position.toLocaleLowerCase().trim(), offers);
       if (matchByPositionName) {
         return matchByPositionName;
       }
@@ -28,17 +22,12 @@ export class CandidateMatcher {
     return undefined;
   }
 
-  private matchCandidatePropertyToOffer(
-    property: string,
-    offers: RecruiteeOffer[]
-  ): number | undefined {
+  private matchCandidatePropertyToOffer(property: string, offers: RecruiteeOffer[]): number | undefined {
     for (const offer of offers) {
       if (
         offer.id == Number.parseInt(property) ||
         offer.title.trim().toLocaleLowerCase() == property ||
-        offer.offer_tags
-          .map(tag => tag.trim().toLocaleLowerCase())
-          .indexOf(property) !== -1 ||
+        offer.offer_tags.map((tag) => tag.trim().toLocaleLowerCase()).indexOf(property) !== -1 ||
         offer.slug == property
       ) {
         return offer.id;

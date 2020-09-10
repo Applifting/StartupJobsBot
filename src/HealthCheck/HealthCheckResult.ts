@@ -1,5 +1,5 @@
-import { SlackIntegrationCheckResult } from "../Slack/SlackIntegrationCheckResult";
-import { RecruiteeIntegrationCheckResult } from "../Recruitee/RecruiteeIntegrationCheckResult";
+import { SlackIntegrationCheckResult } from '../Slack/SlackIntegrationCheckResult';
+import { RecruiteeIntegrationCheckResult } from '../Recruitee/RecruiteeIntegrationCheckResult';
 
 export interface HealthCheckResult {
   status: AppStatus;
@@ -8,6 +8,6 @@ export interface HealthCheckResult {
 }
 
 export enum AppStatus {
-  UP = "UP",
-  DOWN = "DOWN"
+  UP = 'UP',
+  DOWN = 'DOWN',
 }

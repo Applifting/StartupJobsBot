@@ -1,8 +1,8 @@
-import { ISlackClient } from "../Slack/ISlackClient";
-import { HealthCheckResult, AppStatus } from "./HealthCheckResult";
-import { SlackIntegrationCheckResult } from "../Slack/SlackIntegrationCheckResult";
-import { IRecruiteeClient } from "../Recruitee/IRecruiteeClient";
-import { RecruiteeIntegrationCheckResult } from "../Recruitee/RecruiteeIntegrationCheckResult";
+import { ISlackClient } from '../Slack/ISlackClient';
+import { HealthCheckResult, AppStatus } from './HealthCheckResult';
+import { SlackIntegrationCheckResult } from '../Slack/SlackIntegrationCheckResult';
+import { IRecruiteeClient } from '../Recruitee/IRecruiteeClient';
+import { RecruiteeIntegrationCheckResult } from '../Recruitee/RecruiteeIntegrationCheckResult';
 
 export class HealthCheck {
   slack: ISlackClient | undefined;
@@ -33,16 +33,13 @@ export class HealthCheck {
     if (slackResult && slackResult != SlackIntegrationCheckResult.OK) {
       appStatus = AppStatus.DOWN;
     }
-    if (
-      recruiteeResult &&
-      recruiteeResult != RecruiteeIntegrationCheckResult.OK
-    ) {
+    if (recruiteeResult && recruiteeResult != RecruiteeIntegrationCheckResult.OK) {
       appStatus = AppStatus.DOWN;
     }
     return {
       status: appStatus,
       slack: slackResult ?? SlackIntegrationCheckResult.NOT_SET_UP,
-      recruitee: recruiteeResult ?? RecruiteeIntegrationCheckResult.NOT_SET_UP
+      recruitee: recruiteeResult ?? RecruiteeIntegrationCheckResult.NOT_SET_UP,
     };
   }
 }

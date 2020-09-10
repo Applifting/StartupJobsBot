@@ -1,5 +1,5 @@
-import { isObject, clone } from "lodash";
-import { isString, inspect, isError } from "util";
+import { isObject, clone } from 'lodash';
+import { isString, inspect, isError } from 'util';
 
 export const deepRegexReplace = (value: any, keysAndValues: Array<string>) => {
   if (!isError(value)) {
@@ -10,9 +10,8 @@ export const deepRegexReplace = (value: any, keysAndValues: Array<string>) => {
     if (value.stack) value.stack = deepRegexReplace(value.stack, keysAndValues);
   }
 
-  const redactedPlaceholder = "[REDACTED]";
-  if (typeof value === "undefined" || typeof keysAndValues === "undefined")
-    return {};
+  const redactedPlaceholder = '[REDACTED]';
+  if (typeof value === 'undefined' || typeof keysAndValues === 'undefined') return {};
 
   if (Array.isArray(value)) {
     for (let i = 0; i < value.length; i = i + 1) {
@@ -24,7 +23,7 @@ export const deepRegexReplace = (value: any, keysAndValues: Array<string>) => {
   if (isString(value)) {
     let toReturn = value;
     for (let j = 0; j < keysAndValues.length; j++) {
-      const regex = new RegExp(keysAndValues[j], "gi");
+      const regex = new RegExp(keysAndValues[j], 'gi');
       toReturn = toReturn.replace(regex, redactedPlaceholder);
     }
     return toReturn;

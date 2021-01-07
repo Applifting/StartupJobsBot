@@ -29,7 +29,7 @@ export class RecruiteeClient implements IRecruiteeClient {
           name: candidate.name,
           emails: [candidate.email],
           phones: [candidate.phone],
-          sources: ['StartupJobs'],
+          sources: [candidate.source || 'StartupJobs'],
           cover_letter: candidate.why,
           links: [candidate.details],
           social_links: candidate.linkedin ? [candidate.linkedin] : undefined,

@@ -34,7 +34,7 @@ export interface StartupJobsPayload {
   /// True/False
   gdpr_accepted: boolean;
   /// STARTUPJOBS
-  source?: 'SMITIO' | undefined;
+  source?: 'SMITIO' | 'Web' | undefined;
 }
 
 export const startupJobsPayloadSchema = Joi.object().keys({
@@ -64,5 +64,5 @@ export const startupJobsPayloadSchema = Joi.object().keys({
     .allow(null),
   files: Joi.array().items(Joi.string()),
   gdpr_accepted: Joi.boolean().required(),
-  source: Joi.string().valid(['SMITIO']),
+  source: Joi.string().valid(['SMITIO', 'Web']),
 });

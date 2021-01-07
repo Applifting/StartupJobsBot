@@ -1,4 +1,4 @@
-import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
+-import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
 import axios, { AxiosPromise } from 'axios';
 import { SlackConfig } from './SlackConfig';
 import * as url from 'url';

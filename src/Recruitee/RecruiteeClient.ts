@@ -31,7 +31,7 @@ export class RecruiteeClient implements IRecruiteeClient {
           phones: [candidate.phone],
           sources: [candidate.source || 'StartupJobs'],
           cover_letter: candidate.why,
-          links: [candidate.details],
+          links: candidate.details ? [candidate.details] : undefined,
           social_links: candidate.linkedin ? [candidate.linkedin] : undefined,
           remote_cv_url,
         },

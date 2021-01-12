@@ -16,7 +16,9 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     this.config = config;
   }
 
-  public sendCandidateToSlack(candidate: StartupJobsPayload): AxiosPromise<any> {
+  public sendCandidateToSlack(
+    candidate: StartupJobsPayload
+  ): AxiosPromise<any> {
     const title = this.config.messageTitle || 'Nový kandidát!';
     const payload = {
       text: `${title}\n${candidate.name} chce být ${candidate.position}\n\n\n:phone: ${candidate.phone}\n:email: ${candidate.email}\n`,
@@ -68,7 +70,13 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     if (candidate.linkedin) {
       links.push(`<${candidate.linkedin}|LinkedIn>`);
     }
-    links.push(`<${candidate.details}|${candidate.source ? candidate.source : 'StartupJobs'}>`);
+    if (candidate.linkedin) {
+      links.push(
+        `<${candidate.details}|${
+          candidate.source ? 'GitHub' : 'StartupJobs'
+        }>`
+      );
+    }
     const linksText = links.join(' | ');
     return linksText;
   }
@@ -76,7 +84,11 @@ export class SlackClient implements ISlackClient, IErrorReporter {
   public async checkIntegration(): Promise<SlackIntegrationCheckResult> {
     try {
       const parsedUrl = url.parse(this.config.webhookUrl);
-      if (parsedUrl.host == null || parsedUrl.host?.includes('slack.com') == false || parsedUrl.protocol != 'https:') {
+      if (
+        parsedUrl.host == null ||
+        parsedUrl.host?.includes('slack.com') == false ||
+        parsedUrl.protocol != 'https:'
+      ) {
         throw new Error('URL is not https or does not lead to slack domain');
       }
     } catch (e) {

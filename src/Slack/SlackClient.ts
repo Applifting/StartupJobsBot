@@ -70,7 +70,7 @@ export class SlackClient implements ISlackClient, IErrorReporter {
     if (candidate.linkedin) {
       links.push(`<${candidate.linkedin}|LinkedIn>`);
     }
-    if (candidate.linkedin) {
+    if (candidate.details) {
       links.push(
         `<${candidate.details}|${
           candidate.source ? 'GitHub' : 'StartupJobs'

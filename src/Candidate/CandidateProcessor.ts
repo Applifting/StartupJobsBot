@@ -20,8 +20,10 @@ export class CandiateProcessor {
     }
   }
 
-  public async process(payload: StartupJobsPayload) {
+  public async process(payload: StartupJobsPayload, params?: Object) {
+    const tags: string[] = Object.values(params);
     const anonymizer = new CandidateAnonymizer();
+
     if (this.slack) {
       await this.slack.sendCandidateToSlack(payload.gdpr_accepted ? payload : anonymizer.anonymize(payload));
     }
@@ -30,7 +32,13 @@ export class CandiateProcessor {
       const offers = await this.recruitee.getOffers();
       const offerId = matcher.matchCandidateToOfferId(payload, offers);
       if (offerId) {
-        await this.recruitee.createCandidateInRecruitee(offerId, payload);
+        const createCandidate = await this.recruitee.createCandidateInRecruitee(
+          offerId,
+          payload,
+        );
+
+        await this.recruitee.addCandidateTags(createCandidate.data.candidate.id, tags);
+
       } else {
         throw new AppError(500, `Unable to match ${payload.position} (${payload.internalPositionName}) to any Recruitee offer`);
       }

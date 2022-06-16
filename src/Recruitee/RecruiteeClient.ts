@@ -1,5 +1,5 @@
 import { StartupJobsPayload } from '../StartupJobs/webhookPayload';
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import { DomainNormalizer } from './DomainNormalizer';
 import { RecruiteeOffer } from './RecruiteeOffer';
 import { RecruiteeConfig } from './RecruiteeConfig';
@@ -41,6 +41,24 @@ export class RecruiteeClient implements IRecruiteeClient {
           Authorization: `Bearer ${this.config.accessToken}`,
         },
       }
+    );
+  }
+
+  public async addCandidateTags(candidateId: number, tags: string[]): Promise<AxiosResponse<any>> {
+    if(tags.length === 0) return;
+
+    return axios.post(
+      `https://api.recruitee.com/c/${DomainNormalizer.normalize(
+        this.config.companyDomain,
+      )}/candidates/${candidateId}/tags`,
+      {
+        tags,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.config.accessToken}`,
+        },
+      },
     );
   }
 

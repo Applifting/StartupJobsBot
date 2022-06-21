@@ -68,7 +68,10 @@ export class Server {
       const endpoint = this.config.webhookPath.startsWith('/') ? this.config.webhookPath : `/${this.config.webhookPath}`;
       if (endpoint === ctx.path && ctx.method === 'POST') {
         const payload = this.parser.parse((<any>ctx.request).body);
-        await this.processor.process(payload);
+        const queryParams = ctx.query;
+
+        await this.processor.process(payload, queryParams);
+
         ctx.status = 200;
       }
       await next();

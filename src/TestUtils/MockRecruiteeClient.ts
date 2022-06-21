@@ -20,6 +20,10 @@ export class MockRecruiteeClient implements IRecruiteeClient {
     return Promise.resolve({ status: 200, data: {} } as AxiosResponse);
   }
 
+  public async addCandidateTags(candidateId: number, tags: string[]): Promise<AxiosResponse<any>> {
+    return Promise.resolve({ status: 200, data: {} } as AxiosResponse);
+  }
+
   getOffers(): Promise<RecruiteeOffer[]> {
     this.getOffersCalled = true;
     return Promise.resolve(this.offers);

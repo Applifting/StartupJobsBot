@@ -1,0 +1,17 @@
+include:
+  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
+
+stages:
+    - deploy
+
+deploy:
+  stage: deploy
+  script:
+    - gem install dpl
+    - dpl --provider=heroku --app=startupjobsbot --api-key=$HEROKU_API_KEY
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      when: always
+
+
+

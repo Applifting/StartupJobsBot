@@ -6,6 +6,7 @@ stages:
 
 deploy:
   stage: deploy
+  image: ruby
   script:
     - gem install dpl
     - dpl --provider=heroku --app=startupjobsbot --api-key=$HEROKU_API_KEY

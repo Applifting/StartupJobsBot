@@ -16,7 +16,7 @@
       "required": false
     },
     "RECRUITEE_DOMAIN": {
-      "description": "Recruitee domain for your company. Required if you want to integrate with Recruitee. Example: 'appliftingsro'",
+      "description": "Recruitee domain for your company. Required if you want to integrate with Recruitee. Example: '123456'",
       "required": false
     },
     "SLACK_WEBHOOK_URL": {

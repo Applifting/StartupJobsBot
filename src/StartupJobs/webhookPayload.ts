@@ -35,6 +35,8 @@ export interface StartupJobsPayload {
   gdpr_accepted: boolean;
   /// STARTUPJOBS
   source?: 'SMITIO' | 'Web' | undefined;
+  // true when startupjob sends a webhook test
+  test: boolean;
 }
 
 export const startupJobsPayloadSchema = Joi.object().keys({
@@ -64,4 +66,5 @@ export const startupJobsPayloadSchema = Joi.object().keys({
   files: Joi.array().items(Joi.string()),
   gdpr_accepted: Joi.boolean().required(),
   source: Joi.string().valid(['SMITIO',  'Web']),
+  test: Joi.boolean().default(false)
 });

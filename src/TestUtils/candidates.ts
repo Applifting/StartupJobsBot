@@ -14,4 +14,5 @@ export const mrShark: StartupJobsPayload = {
   internalPositionName: 'JOB1',
   files: ['https://www.startupjobs.cz/download-file?file=my-cv.pdf&hash=816dc09a57ad42048c'],
   gdpr_accepted: true,
+  test: false
 };

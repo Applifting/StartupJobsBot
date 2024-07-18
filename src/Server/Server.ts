@@ -68,10 +68,12 @@ export class Server {
       const endpoint = this.config.webhookPath.startsWith('/') ? this.config.webhookPath : `/${this.config.webhookPath}`;
       if (endpoint === ctx.path && ctx.method === 'POST') {
         const payload = this.parser.parse((<any>ctx.request).body);
-        const queryParams = ctx.query;
-
-        await this.processor.process(payload, queryParams);
-
+        if (payload.test === true) {
+          console.log('Received test webhook, validated but not processing')
+        } else {
+          const queryParams = ctx.query;
+          await this.processor.process(payload, queryParams);
+        }
         ctx.status = 200;
       }
       await next();

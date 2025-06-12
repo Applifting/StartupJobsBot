@@ -1,9 +1,9 @@
-import * as Koa from 'koa';
+import Koa from 'koa';
 import { ServerConfig } from './ServerConfig';
 import { StartupJobsWebhookParser } from '../StartupJobs/StartupJobsWebhookParser';
-import { inspect } from 'util';
+import { inspect } from 'node:util';
 import { CandiateProcessor } from '../Candidate/CandidateProcessor';
-import { Server as HttpServer } from 'http';
+import * as http from 'http';
 import { IErrorReporter } from '../Common/IErrorReporter';
 import { HealthCheck } from '../HealthCheck/HealthCheck';
 import { AppStatus } from '../HealthCheck/HealthCheckResult';
@@ -14,7 +14,7 @@ export class Server {
   private config: ServerConfig;
   private parser: StartupJobsWebhookParser;
   private processor: CandiateProcessor;
-  private runningServer?: HttpServer;
+  private runningServer?: http.Server;
   private errorReporter: IErrorReporter | undefined;
   private healthCheck: HealthCheck;
 
@@ -102,11 +102,11 @@ export class Server {
     }
   }
 
-  public async stop() {
-    return new Promise((res, rej) => {
+  public async stop(): Promise<void> {
+    return new Promise<void>((res, rej) => {
       if (this.runningServer) {
         this.runningServer.close(() => {
-          res();
+          res(undefined);
           console.log('Server stopped');
           return;
         });

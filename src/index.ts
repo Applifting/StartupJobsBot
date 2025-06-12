@@ -3,6 +3,7 @@ import { StartupJobsWebhookParser } from './StartupJobs/StartupJobsWebhookParser
 import { CandiateProcessor } from './Candidate/CandidateProcessor';
 import { SlackClient } from './Slack/SlackClient';
 import { RecruiteeClient } from './Recruitee/RecruiteeClient';
+import { GmailClient } from './Email/GmailClient';
 import { getConfig } from './config';
 import { IErrorReporter } from './Common/IErrorReporter';
 import { HealthCheck } from './HealthCheck/HealthCheck';
@@ -11,7 +12,8 @@ const config = getConfig();
 const parser = new StartupJobsWebhookParser();
 const slack = config.slack && new SlackClient(config.slack);
 const recruitee = config.recruitee && new RecruiteeClient(config.recruitee);
-const processor = new CandiateProcessor(slack, recruitee);
+const email = config.gmail && new GmailClient(config.gmail);
+const processor = new CandiateProcessor(slack, recruitee, email);
 const healthCheck = new HealthCheck(slack, recruitee);
 
 let errorReporter: IErrorReporter | undefined;

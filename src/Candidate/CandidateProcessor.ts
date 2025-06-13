@@ -5,11 +5,12 @@ import { AppError } from '../Common/AppError';
 import { IRecruiteeClient } from '../Recruitee/IRecruiteeClient';
 import { ISlackClient } from '../Slack/ISlackClient';
 import { IEmailClient } from '../Email/IEmailClient';
+import { AxiosResponse } from 'axios';
 
 /**
  * Takes normalized StartupJobs payload and sends it to Slack and Recruitee
  */
-export class CandiateProcessor {
+export class CandidateProcessor {
   private slack?: ISlackClient;
   private recruitee?: IRecruiteeClient;
   private email?: IEmailClient;
@@ -31,7 +32,7 @@ export class CandiateProcessor {
       await this.slack.sendCandidateToSlack(payload.gdpr_accepted ? payload : anonymizer.anonymize(payload));
     }
 
-    let recruiteeResponse;
+    let recruiteeResponse: AxiosResponse<any>;
     if (this.recruitee) {
       const matcher = new CandidateMatcher();
       const offers = await this.recruitee.getOffers();

@@ -1,6 +1,5 @@
 import { StartupJobsPayload, startupJobsPayloadSchema } from './webhookPayload';
 import { AppError } from '../Common/AppError';
-import * as Joi from 'joi';
 
 export class StartupJobsWebhookParser {
   public parse(webhookPayload: any): StartupJobsPayload {

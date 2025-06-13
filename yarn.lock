@@ -657,7 +657,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/axios-mock-adapter@^1.17.0":
+"@types/axios-mock-adapter@^1.10.4":
   version "1.10.4"
   resolved "https://registry.yarnpkg.com/@types/axios-mock-adapter/-/axios-mock-adapter-1.10.4.tgz#120241dd3737515843e03944de51962e6042ec43"
   integrity sha512-HRzHH7y70C42itkFFBFRrla3DSdv/NwTl+n4um/wt/GelNFLoVLsnbD4ZcVhLp+grVveLHnewIHLiRyXP6Q+Xg==

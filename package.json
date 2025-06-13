@@ -36,7 +36,7 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/axios-mock-adapter": "^1.17.0",
+    "@types/axios-mock-adapter": "^1.10.4",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
     "axios-mock-adapter": "^1.22.0",

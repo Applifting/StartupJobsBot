@@ -41,7 +41,7 @@ export class GmailClient implements IEmailClient {
     console.log('Email body:', body);
 
     await this.transporter.sendMail({
-      from: `"Talent Aquisition Team" <${this.config.email}>`,
+      from: `"Talent Acquisition Team" <${this.config.email}>`,
       to: candidate.email,
       subject,
       html: body,

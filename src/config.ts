@@ -38,7 +38,7 @@ export const getConfig = (): Config => {
     };
   }
 
-  let gmailConfig = undefined;
+  let gmailConfig: GmailConfig | undefined;
   const gmailEmail = process.env.GMAIL_EMAIL;
   const gmailPassword = process.env.GMAIL_PASSWORD;
   if (gmailEmail && gmailPassword) {

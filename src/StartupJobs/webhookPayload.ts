@@ -7,39 +7,39 @@ Webhook odesílá data o zájemci ve formátu JSON.
 */
 
 export interface StartupJobsPayload {
-  ///"2017-09-11T18:19:15+02:00"
+  // "2017-09-11T18:19:15+02:00"
   date: string;
-  /// 12345
+  // 12345
   candidateID: number;
-  /// 1234
+  // 1234
   offerID: number;
-  /// "Pan Žralok"
+  // "Pan Žralok"
   name: string;
-  /// "Vývojář webhooků"
+  // "Vývojář webhooků"
   position: string;
-  /// "Chci se stát vývojářem webhooků na StartupJobs.cz, protože mě to baví!",
+  // "Chci se stát vývojářem webhooků na StartupJobs.cz, protože mě to baví!",
   why: string;
-  /// "+420 725 875 752",
+  // "+420 725 875 752",
   phone: string;
-  /// "dev@startupjobs.cz",
+  // "dev@startupjobs.cz",
   email: string;
-  /// "https:\/\/www.startupjobs.cz\/admin\/zajemce\/32437?oid=4332",
+  // "https:\/\/www.startupjobs.cz\/admin\/zajemce\/32437?oid=4332",
   details: string;
-  /// "https://linkedin.com/pan-zralok"
+  // "https://linkedin.com/pan-zralok"
   linkedin: string;
-  /// "JOB1"
+  // "JOB1"
   internalPositionName: string;
-  /// ["https:\/\/www.startupjobs.cz\/download-file?file=my-cv.pdf&hash=816dc09a57ad42048c"]
+  // ["https:\/\/www.startupjobs.cz\/download-file?file=my-cv.pdf&hash=816dc09a57ad42048c"]
   files: string[];
-  /// True/False
+  // True/False
   gdpr_accepted: boolean;
-  /// STARTUPJOBS
+  // STARTUPJOBS
   source?: 'SMITIO' | 'Web' | undefined;
   // true when startupjob sends a webhook test
   test: boolean;
 }
 
-export const startupJobsPayloadSchema = Joi.object().keys({
+export const startupJobsPayloadSchema = Joi.object({
   date: Joi.string().required(),
   candidateID: Joi.number().required(),
   offerID: Joi.number().required(),
@@ -65,6 +65,6 @@ export const startupJobsPayloadSchema = Joi.object().keys({
     .allow(null),
   files: Joi.array().items(Joi.string()),
   gdpr_accepted: Joi.boolean().required(),
-  source: Joi.string().valid(['SMITIO',  'Web']),
+  source: Joi.string().valid('SMITIO', 'Web'),
   test: Joi.boolean().default(false)
 });

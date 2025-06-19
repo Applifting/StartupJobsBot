@@ -2,6 +2,7 @@
   "name": "StartupJobsBot",
   "description": "Tiny service that takes candidate webhook from Startupsjob and announces the candidate on Slack and adds them to Recruitee.",
   "repository": "https://github.com/Applifting/StartupJobsBot",
+  "stack": "heroku-24",
   "keywords": [
     "startupjobs",
     "slack",
@@ -31,6 +32,25 @@
     "SLACK_REPORT_ERRORS": {
       "description": "Should errors be reported into slack? Default is false. Set to 'true' if you want to have it turned on.",
       "value": "true",
+      "required": false
+    },
+    "GMAIL_EMAIL": {
+      "description": "Gmail address to send emails from. Required if you want to send email notifications to candidates.",
+      "value": "join.us@applifting.cz",
+      "required": false
+    },
+    "GMAIL_PASSWORD": {
+      "description": "Gmail password or app-specific password for the email account. Required if you want to send email notifications to candidates.",
+      "required": true
+    },
+    "GMAIL_SUBJECT_TEMPLATE": {
+      "description": "Custom template for email subject. Use {position} as placeholder for the position name.",
+      "value": "Your application landed safely! 🚀",
+      "required": false
+    },
+    "GMAIL_BODY_TEMPLATE": {
+      "description": "Custom template for email body. Use {name}, {position}, and {recruiteeId} as placeholders. HTML formatting is supported.",
+      "value": "Hey there! 👋<br><br>Thanks so much for your interest in working at Applifting! We got your CV, and we're going to get to it soon.<br><br>Before we get in touch with you, we'd like to send you a couple of things to help you better understand where you're applying and who your future colleagues might be.<br><br>You can read about our culture on <a href=\"https://github.com/applifting\">GitHub</a>, and we have a lot on our <a href=\"https://blog.applifting.cz/\">blog</a>, where you can also find the latest article published for our 10th anniversary this year. The article summarizes everything our founders Filip and Vrata said in a recorded podcast <a href=\"https://blog.applifting.cz/podcast\">here</a>. 🤗<br><br>If that wasn't enough, I'm posting 2 more podcasts with the Applifting founders where you can learn about us in real depth:<br><br><a href=\"https://blog.applifting.cz/podcast-filip\">Podcast with Filip</a> 🎧<br><a href=\"https://blog.applifting.cz/podcast-vrata\">Podcast with Vráťa</a> 🎧<br><br>What's next? We're going to check out your CV and get back to you within a week tops. 🙂<br>Thanks and take care!",
       "required": false
     },
     "LOG_REQUESTS": {

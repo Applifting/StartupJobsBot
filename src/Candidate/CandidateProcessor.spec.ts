@@ -1,17 +1,17 @@
-import { CandiateProcessor } from './CandidateProcessor';
+import { CandidateProcessor } from './CandidateProcessor';
 import { MockSlackClient } from '../TestUtils/MockSlackClient';
 import { MockRecruiteeClient } from '../TestUtils/MockRecruiteeClient';
 import { mrShark } from '../TestUtils/candidates';
 import { UXDesignerOffer, webhookDevOffer } from '../TestUtils/offers';
 
 describe('CandidateProcessor', () => {
-  let processor: CandiateProcessor;
+  let processor: CandidateProcessor;
   let slackMock: MockSlackClient;
   let recruiteeMock: MockRecruiteeClient;
   beforeEach(() => {
     slackMock = new MockSlackClient();
     recruiteeMock = new MockRecruiteeClient([UXDesignerOffer, webhookDevOffer]);
-    processor = new CandiateProcessor(slackMock, recruiteeMock);
+    processor = new CandidateProcessor(slackMock, recruiteeMock);
   });
 
   it('throws an error when no offer is matched', async () => {

@@ -26,9 +26,9 @@ export class CandidateMatcher {
     for (const offer of offers) {
       if (
         offer.id == Number.parseInt(property) ||
-        offer.title.trim().toLocaleLowerCase() == property ||
-        offer.offer_tags.map((tag) => tag.trim().toLocaleLowerCase()).indexOf(property) !== -1 ||
-        offer.slug == property
+        (offer.title && offer.title.trim().toLocaleLowerCase() == property) ||
+        (offer.offer_tags && offer.offer_tags.map((tag) => tag.trim().toLocaleLowerCase()).indexOf(property) !== -1) ||
+        (offer.slug && offer.slug == property)
       ) {
         return offer.id;
       }

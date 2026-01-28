@@ -62,14 +62,47 @@ export class RecruiteeClient implements IRecruiteeClient {
     );
   }
 
-  public getOffers(): Promise<RecruiteeOffer[]> {
-    return axios
+  public async getOffers(): Promise<RecruiteeOffer[]> {
+    const offers = await axios
       .get(`https://api.recruitee.com/c/${DomainNormalizer.normalize(this.config.companyDomain)}/offers`, {
         headers: {
           Authorization: `Bearer ${this.config.accessToken}`,
         },
       })
       .then((r: any) => r.data.offers);
+
+    // The list endpoint doesn't return offer_tags, so we need to fetch individual offer details
+    // to get tags. Fetch them in parallel for efficiency.
+    const offersWithTags = await Promise.all(
+      offers.map(async (offer: any) => {
+        try {
+          const detailResponse = await axios.get(
+            `https://api.recruitee.com/c/${DomainNormalizer.normalize(this.config.companyDomain)}/offers/${offer.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${this.config.accessToken}`,
+              },
+            }
+          );
+          return {
+            id: offer.id,
+            title: offer.title,
+            slug: offer.slug,
+            offer_tags: detailResponse.data.offer.offer_tags || [],
+          };
+        } catch (error) {
+          // If fetching individual offer fails, return offer without tags
+          return {
+            id: offer.id,
+            title: offer.title,
+            slug: offer.slug,
+            offer_tags: [],
+          };
+        }
+      })
+    );
+
+    return offersWithTags;
   }
 
   public async checkIntegration(): Promise<RecruiteeIntegrationCheckResult> {

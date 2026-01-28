@@ -67,14 +67,28 @@ export class Server {
     this.server.use(async (ctx, next) => {
       const endpoint = this.config.webhookPath.startsWith('/') ? this.config.webhookPath : `/${this.config.webhookPath}`;
       if (endpoint === ctx.path && ctx.method === 'POST') {
-        const payload = this.parser.parse((<any>ctx.request).body);
-        if (payload.test === true) {
-          console.log('Received test webhook, validated but not processing')
-        } else {
-          const queryParams = ctx.query;
-          await this.processor.process(payload, queryParams);
+          try {
+          const payload = this.parser.parse((<any>ctx.request).body);
+          if (payload.test === true) {
+            console.log('Received test webhook, validated but not processing')
+          } else {
+            const queryParams = ctx.query;
+            await this.processor.process(payload, queryParams);
+          }
+        } catch (err) {
+          // Log errors but always return 200 to prevent webhook deletion
+          if (this.config.logErrors) {
+            console.log('Webhook error:', err);
+          }
+          if (this.errorReporter) {
+            this.errorReporter.reportError(inspect((<any>ctx.request).body), err).catch((e) => {
+              console.log('Error reporting failed:', e);
+            });
+          }
         }
+        // Always return 200, even on error, to prevent webhook deletion
         ctx.status = 200;
+        ctx.body = ctx.body || { message: 'OK' };
       }
       await next();
     });

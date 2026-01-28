@@ -52,17 +52,13 @@ describe('Server', () => {
   });
 
   describe('invalid requests', () => {
-    it('fails 400 when invalid request is sent', async () => {
-      try {
-        const response = await axios.post('http://localhost:4000/testWebhook', {
-          ...mrShark,
-          name: undefined,
-        });
-        fail();
-      } catch (e) {
-        expect(inMemoryReporter.lastError).toBeDefined();
-        expect(e.response.status).toBe(400);
-      }
+    it('returns 200 even when invalid request is sent, but logs error', async () => {
+      const response = await axios.post('http://localhost:4000/testWebhook', {
+        ...mrShark,
+        name: undefined,
+      });
+      expect(response.status).toBe(200);
+      expect(inMemoryReporter.lastError).toBeDefined();
     });
   });
 });

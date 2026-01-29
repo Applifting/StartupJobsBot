@@ -34,5 +34,27 @@ describe('CandidateMatcher', () => {
         ])
       ).toEqual(1);
     });
+    it('only matches against active offers (published/internal), ignores archived/closed', () => {
+      const archivedOffer = {
+        ...webhookDevOffer,
+        id: 10,
+        offer_tags: ['JOB1'],
+        status: 'archived' as const,
+      };
+      const publishedOffer = {
+        ...webhookDevOffer,
+        id: 20,
+        offer_tags: ['JOB1'],
+        status: 'published' as const,
+      };
+      // Should only match the published offer, archived should be ignored
+      expect(
+        matcher.matchCandidateToOfferId(mrShark, [archivedOffer, publishedOffer])
+      ).toEqual(20);
+      // If only archived offers exist, should not match
+      expect(
+        matcher.matchCandidateToOfferId(mrShark, [archivedOffer])
+      ).toBeUndefined();
+    });
   });
 });

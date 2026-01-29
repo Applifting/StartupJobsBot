@@ -71,10 +71,16 @@ export class RecruiteeClient implements IRecruiteeClient {
       })
       .then((r: any) => r.data.offers);
 
+    // Filter out closed and archived offers - we only want active offers (published/internal)
+    const activeOffers = offers.filter((offer: any) => {
+      const status = offer.status;
+      return status === 'published' || status === 'internal';
+    });
+
     // The list endpoint doesn't return offer_tags, so we need to fetch individual offer details
     // to get tags. Fetch them in parallel for efficiency.
     const offersWithTags = await Promise.all(
-      offers.map(async (offer: any) => {
+      activeOffers.map(async (offer: any) => {
         try {
           const detailResponse = await axios.get(
             `https://api.recruitee.com/c/${DomainNormalizer.normalize(this.config.companyDomain)}/offers/${offer.id}`,
@@ -89,6 +95,7 @@ export class RecruiteeClient implements IRecruiteeClient {
             title: offer.title,
             slug: offer.slug,
             offer_tags: detailResponse.data.offer.offer_tags || [],
+            status: offer.status,
           };
         } catch (error) {
           // If fetching individual offer fails, return offer without tags
@@ -97,6 +104,7 @@ export class RecruiteeClient implements IRecruiteeClient {
             title: offer.title,
             slug: offer.slug,
             offer_tags: [],
+            status: offer.status,
           };
         }
       })

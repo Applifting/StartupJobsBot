@@ -23,6 +23,7 @@ export class CandidateMatcher {
   }
 
   private matchCandidatePropertyToOffer(property: string, offers: RecruiteeOffer[]): number | undefined {
+    // All offers passed here should already be active (published/internal) as they're filtered in getOffers()
     for (const offer of offers) {
       if (
         offer.id == Number.parseInt(property) ||
@@ -33,5 +34,6 @@ export class CandidateMatcher {
         return offer.id;
       }
     }
+    return undefined;
   }
 }

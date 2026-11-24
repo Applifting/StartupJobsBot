@@ -1,6 +1,6 @@
 import { Server } from './Server';
 import { StartupJobsWebhookParser } from '../StartupJobs/StartupJobsWebhookParser';
-import { CandiateProcessor } from '../Candidate/CandidateProcessor';
+import { CandidateProcessor } from '../Candidate/CandidateProcessor';
 import { MockSlackClient } from '../TestUtils/MockSlackClient';
 import { MockRecruiteeClient } from '../TestUtils/MockRecruiteeClient';
 import { webhookDevOffer } from '../TestUtils/offers';
@@ -27,7 +27,7 @@ describe('Server', () => {
     inMemoryReporter = new InMemoryErrorReporter();
     slack = new MockSlackClient();
     recruitee = new MockRecruiteeClient([webhookDevOffer]);
-    const processor = new CandiateProcessor(slack, recruitee);
+    const processor = new CandidateProcessor(slack, recruitee);
     server = new Server(new StartupJobsWebhookParser(), processor, new HealthCheck(), inMemoryReporter, {
       port: 4000,
       logPayloads: false,
@@ -46,8 +46,20 @@ describe('Server', () => {
     it('processes valid webhook request', async () => {
       const response = await axios.post('http://localhost:4000/testWebhook', mrShark);
       expect(response.status).toBe(200);
+      await server.idle();
       expect(slack.sendCandidateToSlackCalled).toBe(true);
       expect(recruitee.createCandidateCalled).toBe(true);
+    });
+  });
+
+  describe('failed processing', () => {
+    it('answers 200 right away and reports the failure afterwards', async () => {
+      recruitee.createError = new Error('recruitee is down');
+      const response = await axios.post('http://localhost:4000/testWebhook', mrShark);
+      expect(response.status).toBe(200);
+      await server.idle();
+      expect(inMemoryReporter.lastError!.message).toBe('recruitee is down');
+      expect(slack.sendCandidateToSlackCalled).toBe(true);
     });
   });
 

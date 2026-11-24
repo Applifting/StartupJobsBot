@@ -94,3 +94,20 @@ describe('SlackClient', () => {
     });
   });
 });
+
+describe('SlackClient.describeOutcome', () => {
+  it('links the profile of a placed candidate', () => {
+    const a = SlackClient.describeOutcome(mrShark, { status: 'placed', offerTitle: 'QA Engineer', candidateUrl: 'https://app.recruitee.com/x' });
+    expect(a.text).toBe('Uložen k pozici *QA Engineer*. <https://app.recruitee.com/x|Otevřít profil>');
+  });
+  it('explains the fix for a fallback', () => {
+    const a = SlackClient.describeOutcome(mrShark, { status: 'fallback', suggestions: [{ id: 5, title: 'Webhook dev' }] });
+    expect(a.text).toContain('záložním talent poolu');
+    expect(a.text).toContain('č. 1234, interní název: JOB1');
+    expect(a.text).toContain('Nejblíž v Recruitee: Webhook dev (ID 5).');
+  });
+  it('says whether a failed candidate will be retried', () => {
+    expect(SlackClient.describeOutcome(mrShark, { status: 'failed', reason: 'x', willRetry: true }).text).toContain('Hodinová kontrola');
+    expect(SlackClient.describeOutcome(mrShark, { status: 'failed', reason: 'x' }).text).toContain('ručně');
+  });
+});

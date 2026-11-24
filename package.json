@@ -12,7 +12,9 @@
     "build": "rm -rf ./build && tsc",
     "lint": "tslint -p . -c tslint.json -t verbose --fix",
     "test": "jest --coverage",
-    "test:watch": "jest --watchAll --coverage"
+    "test:watch": "jest --watchAll --coverage",
+    "offers": "ts-node src/Scripts/listOffers.ts",
+    "reconcile": "ts-node src/Scripts/reconcile.ts"
   },
   "engines": {
     "node": "20.x",

@@ -20,6 +20,58 @@
       "description": "Recruitee domain for your company. Required if you want to integrate with Recruitee. Example: '123456'",
       "required": false
     },
+    "RECRUITEE_FALLBACK_OFFER_ID": {
+      "description": "Numeric id of the Recruitee offer (ideally a dedicated talent pool) that receives candidates who cannot be matched to any active offer. Without it such candidates do not reach Recruitee. Run 'yarn offers' or open the talent pool in Recruitee to find the id.",
+      "required": false
+    },
+    "STARTUPJOBS_API_TOKEN": {
+      "description": "StartupJobs company API token. Enables the reconciler, which periodically pulls applications from StartupJobs and imports those missing in Recruitee.",
+      "required": false
+    },
+    "RECONCILE_DRY_RUN": {
+      "description": "While 'true' the reconciler only reports to Slack what it would import. Set to 'false' once a report looks right.",
+      "value": "true",
+      "required": false
+    },
+    "RECONCILE_INTERVAL_MINUTES": {
+      "description": "How often the reconciler runs. 0 turns the periodic run off.",
+      "value": "60",
+      "required": false
+    },
+    "RECONCILE_LOOKBACK_DAYS": {
+      "description": "How many days back each reconciler run checks.",
+      "value": "14",
+      "required": false
+    },
+    "RECONCILE_MAX_IMPORTS_PER_RUN": {
+      "description": "Safety limit of candidates imported by one reconciler run.",
+      "value": "25",
+      "required": false
+    },
+    "RECONCILE_TAG": {
+      "description": "Optional Recruitee tag put on candidates imported by the reconciler.",
+      "required": false
+    },
+    "DAILY_CHECK_HOUR": {
+      "description": "Hour (0-23, in BOT_TIMEZONE) of the daily check that reports StartupJobs offers which would not find a Recruitee offer and candidates waiting in the fallback pool. -1 turns it off.",
+      "value": "8",
+      "required": false
+    },
+    "WEEKLY_SUMMARY_HOUR": {
+      "description": "Hour (0-23, in BOT_TIMEZONE) of the Monday summary of last week's applications. -1 turns it off.",
+      "value": "9",
+      "required": false
+    },
+    "FALLBACK_REMINDER_WORKDAYS": {
+      "description": "Working days a candidate may wait in the fallback pool before the daily check mentions them.",
+      "value": "2",
+      "required": false
+    },
+    "BOT_TIMEZONE": {
+      "description": "Time zone for the scheduled reports.",
+      "value": "Europe/Prague",
+      "required": false
+    },
     "SLACK_WEBHOOK_URL": {
       "description": "Incoming webhook integration url from Slack. See: https://api.slack.com/messaging/webhooks on how to se it up.",
       "required": true

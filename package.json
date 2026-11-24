@@ -17,7 +17,7 @@
     "reconcile": "ts-node src/Scripts/reconcile.ts"
   },
   "engines": {
-    "node": "20.x",
+    "node": "24.x",
     "npm": ">=6.0.0"
   },
   "dependencies": {

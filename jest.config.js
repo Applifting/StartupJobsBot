@@ -1,11 +1,9 @@
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
-  setupFiles: [],
-  "collectCoverageFrom": [
-    "**/*.{ts}",
-    "!**/TestUtils/**",
-    "!**/node_modules/**",
-    "!**/vendor/**"
-  ]
+  roots: ['<rootDir>/src'],
+  transform: {
+    // tsconfig.json leaves the specs and jest types out of the production build; the specs need both
+    '^.+\\.ts$': ['ts-jest', { tsconfig: 'tsconfig.spec.json' }],
+  },
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.spec.ts', '!src/TestUtils/**', '!src/Scripts/**'],
 };

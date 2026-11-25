@@ -17,7 +17,7 @@ export class StartupJobsWebhookParser {
   private static normalizePayload(webhookPayload: StartupJobsPayload): StartupJobsPayload {
     const normalized = { ...webhookPayload };
     normalized.linkedin = webhookPayload.linkedin && webhookPayload.linkedin.replace(/\\/g, '');
-    normalized.files = normalized.files && normalized.files.map((f) => f.replace(/\\/g, ''));
+    normalized.files = (normalized.files || []).map((f) => f.replace(/\\/g, ''));
     return normalized;
   }
 }

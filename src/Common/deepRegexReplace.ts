@@ -1,5 +1,8 @@
 import { isObject, clone } from 'lodash';
-import { isString, inspect, isError } from 'util';
+// util.isError and util.isString were removed in Node.js 23
+const isError = (value: any): value is Error => value instanceof Error;
+const isString = (value: any): value is string => typeof value === 'string';
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const deepRegexReplace = (value: any, keysAndValues: Array<string>) => {
   if (!isError(value)) {
@@ -23,7 +26,7 @@ export const deepRegexReplace = (value: any, keysAndValues: Array<string>) => {
   if (isString(value)) {
     let toReturn = value;
     for (let j = 0; j < keysAndValues.length; j++) {
-      const regex = new RegExp(keysAndValues[j], 'gi');
+      const regex = new RegExp(escapeRegExp(keysAndValues[j]), 'gi');
       toReturn = toReturn.replace(regex, redactedPlaceholder);
     }
     return toReturn;

@@ -22,6 +22,12 @@ describe('StartupJobsWebhookParser', () => {
     });
   });
 
+  describe('Candidate without attachments', () => {
+    it('parses OK when files are null', () => {
+      expect(parser.parse({ ...mrShark, files: null }).files).toEqual([]);
+    });
+  });
+
   describe('Invalid candidate', () => {
     it('throws an error', () => {
       expect(() => parser.parse({ ...mrShark, name: undefined })).toThrowError();

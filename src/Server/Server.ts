@@ -7,6 +7,9 @@ import * as http from 'http';
 import { IErrorReporter } from '../Common/IErrorReporter';
 import { HealthCheck } from '../HealthCheck/HealthCheck';
 import { AppStatus } from '../HealthCheck/HealthCheckResult';
+import { describePayload } from '../Common/describePayload';
+import { sanitzeError } from '../Common/sanitizeError';
+import { summarizeError } from '../Common/summarizeError';
 const bodyParser = require('koa-bodyparser');
 
 export class Server {
@@ -17,6 +20,7 @@ export class Server {
   private runningServer?: http.Server;
   private errorReporter: IErrorReporter | undefined;
   private healthCheck: HealthCheck;
+  private inFlight: Promise<void>[] = [];
 
   constructor(
     parser: StartupJobsWebhookParser,
@@ -50,10 +54,10 @@ export class Server {
         await next();
       } catch (err) {
         if (this.config.logErrors) {
-          console.log(err);
+          console.log(sanitzeError(summarizeError(err)));
         }
         if (this.errorReporter) {
-          this.errorReporter.reportError(inspect((<any>ctx.request).body), err).catch((e) => {
+          this.errorReporter.reportError(describePayload((<any>ctx.request).body), err).catch((e) => {
             console.log(e);
           });
         }
@@ -67,24 +71,28 @@ export class Server {
     this.server.use(async (ctx, next) => {
       const endpoint = this.config.webhookPath.startsWith('/') ? this.config.webhookPath : `/${this.config.webhookPath}`;
       if (endpoint === ctx.path && ctx.method === 'POST') {
-          try {
-          const payload = this.parser.parse((<any>ctx.request).body);
-          if (payload.test === true) {
-            console.log('Received test webhook, validated but not processing')
-          } else {
-            const queryParams = ctx.query;
-            await this.processor.process(payload, queryParams);
-          }
-        } catch (err) {
-          // Log errors but always return 200 to prevent webhook deletion
+        const body = (<any>ctx.request).body;
+        const reportWebhookError = (err: any) => {
           if (this.config.logErrors) {
-            console.log('Webhook error:', err);
+            console.log('Webhook error:', sanitzeError(summarizeError(err)));
           }
           if (this.errorReporter) {
-            this.errorReporter.reportError(inspect((<any>ctx.request).body), err).catch((e) => {
+            this.errorReporter.reportError(describePayload(body), err).catch((e) => {
               console.log('Error reporting failed:', e);
             });
           }
+        };
+        try {
+          const payload = this.parser.parse(body);
+          if (payload.test === true) {
+            console.log('Received test webhook, validated but not processing');
+          } else {
+            // Processing talks to Recruitee, Slack and Gmail and can take a while. StartupJobs deletes a webhook
+            // that does not answer, so answer now and finish in the background. Errors are reported the same way.
+            this.inFlight.push(this.processor.process(payload, ctx.query).catch(reportWebhookError));
+          }
+        } catch (err) {
+          reportWebhookError(err);
         }
         // Always return 200, even on error, to prevent webhook deletion
         ctx.status = 200;
@@ -105,6 +113,13 @@ export class Server {
       }
       await next();
     });
+  }
+
+  /** Resolves when every webhook received so far has been processed. */
+  public async idle(): Promise<void> {
+    while (this.inFlight.length > 0) {
+      await this.inFlight.shift();
+    }
   }
 
   public start() {

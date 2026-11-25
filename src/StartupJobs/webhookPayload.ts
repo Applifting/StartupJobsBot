@@ -49,7 +49,9 @@ export const startupJobsPayloadSchema = Joi.object({
   position: Joi.string()
     .required()
     .trim(),
-  why: Joi.string().trim(),
+  why: Joi.string()
+    .trim()
+    .allow(null, ''),
   phone: Joi.string().allow(''),
   email: Joi.string()
     .email()
@@ -63,7 +65,10 @@ export const startupJobsPayloadSchema = Joi.object({
   internalPositionName: Joi.string()
     .trim()
     .allow(null),
-  files: Joi.array().items(Joi.string()),
+  // StartupJobs sends null when the candidate attached nothing
+  files: Joi.array()
+    .items(Joi.string())
+    .allow(null),
   gdpr_accepted: Joi.boolean().required(),
   source: Joi.string().valid('SMITIO', 'Web'),
   test: Joi.boolean().default(false)
